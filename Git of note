@@ -1,0 +1,46 @@
+关于Git的问题可以骑廖学峰的博客细看，讲的比较详细 复制此链接
+http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/
+一、注册
+
+二、删除仓库
+（1）、选中要删除的仓库、点击settings，输入仓库名称，删除
+三、创建仓库
+（1）、输入仓库名称
+（2）、是否在仓库中加一个readme文档
+四、配置SSH公钥  （配置之前需先安装git软件） Git-2.10.2-64-bit
+（1）、ssh-keygen -t rsa -C xiaoruzhao@qq.com
+（2）、打开id_rsa.pub（公钥），复制代码
+（3）、回到github，点击右上角图标点击settings
+（4）、点击SSH and GPG keys，点击New SSH key，输入title，粘贴Key
+（5）、点击添加
+（6）、git clone  粘贴地址
+五、克隆代码
+（1）、使用SSH协议，SSH和HTTPS(传输加密协议，每次都要输入用户名密码)
+（2）、将地址复制
+（3）、进入本地文件夹，右键Git Bash Here，输入git clone 粘贴地址
+
+六、同步代码（如何将修改的代码提交到远端）
+（1）、进入目录
+（2）、设置用户名和密码
+       git config --global  user.name @前面的用户名
+       git config --global  user.email emailAddress
+（3）、git status 查看文件修改的状态
+（4）、git add .
+（5）、git status
+（6）、git commit -a -m "注释信息"  不管是添加还是修改都提交上去，忘记输入-m，按esc输入:q或:wq退出
+（7）、git  push 提交到远端
+七、分支（多人合作，一般是在分支上开发，在主干上发布）
+（1）、git branch 查看分支
+（2）、git checkout -b "20161128-footballSNS-bugfix"  从当前分支上拉一个分支出来
+       git branch "20161128-footballSNS-bugfix"  也是拉一个分支出来 但是不切换过去
+（3）、git branch
+（4）、git checkout  master 切换分支
+（5）、分支的映射 git push --set-upstream origin 20161128-footballSNS-bugfix  在远端创建一个分支
+（6）、打开.git/config，复制修改分支名称
+八、diff代码
+（8）、git  clone    git  pull  把代码从远程拉下来
+       git branch 查看分支 创建分支
+       git checkout -b "分支名称"
+       git checkout "分支" 切换分支
+       git push --set-upstream origin "20160815-footballSNS-test"
+必须在master下操作
