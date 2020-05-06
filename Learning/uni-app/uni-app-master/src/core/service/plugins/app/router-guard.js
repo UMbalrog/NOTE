@@ -202,6 +202,9 @@ function afterEach (to, from) {
     if (toVm) { // 目标页面若已存在，则触发 onShow
       // 延迟执行 onShow，防止与 UniServiceJSBridge.emit('onHidePopup') 冲突。
       setTimeout(function () {
+        if (__PLATFORM__ === 'h5') {
+          UniServiceJSBridge.emit('onNavigationBarChange', toVm.$parent.$parent.navigationBar)
+        }
         callPageHook(toVm, 'onShow')
       }, 0)
       if (__PLATFORM__ === 'h5') {

@@ -8,6 +8,7 @@
 |属性名|类型|说明|平台差异说明|
 |:-|:-|:-|:-|
 |report-submit|Boolean|是否返回 formId 用于发送[模板消息](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/template-message.html)|微信小程序、支付宝小程序|
+|report-submit-timeout|number|等待一段时间（毫秒数）以确认 formId 是否生效。如果未指定这个参数，formId 有很小的概率是无效的（如遇到网络失败的情况）。指定这个参数将可以检测 formId 是否有效，以这个参数的时间作为这项检测的超时时间。如果失败，将返回 requestFormId:fail 开头的 formId|微信小程序2.6.2|
 |@submit|EventHandle|携带 form 中的数据触发 submit 事件，event.detail = {value : {'name': 'value'} , formId: ''}，report-submit 为 true 时才会返回 formId||
 |@reset|EventHandle|表单重置时会触发 reset 事件|&nbsp;|
 
@@ -93,6 +94,66 @@
 ```
  
 ![uniapp](https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/img/form.png?t=201857)
+
+**小程序端注意事项**
+
+小程序端在`from`内的自定义组件内有`input`等表单控件时，无法在`form`的`submit`事件内获取组件内表单控件值，此时可以使用`behaviors`，示例如下：
+
+```html
+<!-- /pages/index/index.vue -->
+<template>  
+    <view class="content">  
+        <form @submit="onSubmit">  
+            <comp-input name="test" v-model="testValue"></comp-input>  
+            <button form-type="submit">Submit</button>  
+        </form>  
+    </view>  
+</template>  
+
+<script>  
+    export default {  
+        data() {  
+            return {  
+                testValue: 'Hello'  
+            }  
+        },  
+        methods: {  
+            onSubmit(e) {  
+                console.log(e)  
+            }  
+        }  
+    }  
+</script>  
+
+<style>  
+
+</style>
+```
+
+```html
+<!-- /components/compInput/compInput.vue -->
+<template>  
+    <view>  
+        <input name="test" style="border: solid 1px #999999;height: 80px;" type="text" @input="onInput" :value="value" />  
+    </view>  
+</template>  
+
+<script>  
+    export default {  
+        name: 'compInput',  
+        behaviors: ['uni://form-field'],
+        methods: {  
+            onInput(e) {  
+                this.$emit('input', e.detail.value)  
+            }  
+        }  
+    }  
+</script>  
+
+<style>  
+
+</style>  
+```
 
 **tips**
 - [插件市场](http://ext.dcloud.net.cn/search?q=%E8%A1%A8%E5%8D%95%E6%A0%A1%E9%AA%8C)有表单校验插件

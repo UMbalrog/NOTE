@@ -24,7 +24,7 @@ console.log(app.globalData)
 
 |方法|描述|平台说明|
 |---|---|---|
-|page.$getAppWebview()|获取当前页面的webview对象实例|5+App|
+|page.$getAppWebview()|获取当前页面的webview对象实例|App|
 |page.route|获取当前页面的路由|&nbsp;|
 
 Tips：
@@ -40,7 +40,7 @@ Tips：
 
 但`uni-app`框架有自己的窗口管理机制，请不要自己创建和销毁webview，如有需求覆盖子窗体上去，请使用[原生子窗体subNvue](/api/window/subNVues)。
 
-**注意：此方法仅 5+app 支持**
+**注意：此方法仅 App 支持**
 
 **示例：**
 
@@ -54,7 +54,7 @@ export default {
   },
   onLoad() {
     // #ifdef APP-PLUS
-    const currentWebview = this.$mp.page.$getAppWebview(); //此对象相当于html5plus里的plus.webview.currentWebview()。在uni-app里，直接使用plus.webview.currentWebview()无效
+    const currentWebview = this.$scope.$getAppWebview(); //此对象相当于html5plus里的plus.webview.currentWebview()。在uni-app里vue页面直接使用plus.webview.currentWebview()无效，非v3编译模式使用this.$mp.page.$getAppWebview()
     currentWebview.setBounce({position:{top:'100px'},changeoffset:{top:'0px'}}); //动态重设bounce效果
     // #endif
   }

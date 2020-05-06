@@ -23,7 +23,7 @@
 |2g|2g 网络||
 |3g|3g 网络||
 |4g|4g 网络||
-|ethernet|有线网络|5+App|
+|ethernet|有线网络|App|
 |unknown|Android 下不常见的网络类型||
 |none|无网络|&nbsp;|
 
@@ -44,7 +44,7 @@ uni.getNetworkType({
 
 |参数|类型|说明|平台差异说明|
 |:-|:-|:-|:-|
-|isConnected|Boolean|当前是否有网络连接|头条小程序不支持|
+|isConnected|Boolean|当前是否有网络连接|字节跳动小程序不支持|
 |networkType|String|网络类型|&nbsp;|
 
 **示例**

@@ -2,12 +2,14 @@
   <uni-image v-on="$listeners">
     <div
       ref="content"
-      :style="modeStyle" />
+      :style="modeStyle"
+    />
     <img :src="realImagePath">
     <v-uni-resize-sensor
       v-if="mode === 'widthFix'"
       ref="sensor"
-      @resize="_resize" />
+      @resize="_resize"
+    />
   </uni-image>
 </template>
 <script>
@@ -32,8 +34,7 @@ export default {
     return {
       originalWidth: 0,
       originalHeight: 0,
-      availHeight: '',
-      sizeFixed: false
+      availHeight: ''
     }
   },
   computed: {
@@ -41,12 +42,12 @@ export default {
       return this.originalWidth && this.originalHeight ? this.originalWidth / this.originalHeight : 0
     },
     realImagePath () {
-      return this.src && this.$getRealPath(this.src)
+      return this.$getRealPath(this.src)
     },
     modeStyle () {
       let size = 'auto'
       let position = ''
-      let repeat = 'no-repeat'
+      const repeat = 'no-repeat'
 
       switch (this.mode) {
         case 'aspectFit':
@@ -98,12 +99,12 @@ export default {
   },
   watch: {
     src (newValue, oldValue) {
+      this._setContentImage()
       this._loadImage()
     },
     mode (newValue, oldValue) {
       if (oldValue === 'widthFix') {
         this.$el.style.height = this.availHeight
-        this.sizeFixed = false
       }
       if (newValue === 'widthFix' && this.ratio) {
         this._fixSize()
@@ -112,11 +113,15 @@ export default {
   },
   mounted () {
     this.availHeight = this.$el.style.height || ''
+    this._setContentImage()
+    if (!this.realImagePath) {
+      return
+    }
     this._loadImage()
   },
   methods: {
     _resize () {
-      if (this.mode === 'widthFix' && !this.sizeFixed) {
+      if (this.mode === 'widthFix') {
         this._fixSize()
       }
     },
@@ -129,12 +134,12 @@ export default {
           height = Math.round(height / 2) * 2
         }
         this.$el.style.height = height + 'px'
-        this.sizeFixed = true
       }
     },
+    _setContentImage () {
+      this.$refs.content.style.backgroundImage = this.src ? `url("${this.realImagePath}")` : 'none'
+    },
     _loadImage () {
-      this.$refs.content.style.backgroundImage = this.src ? `url(${this.realImagePath})` : 'none'
-
       const _self = this
       const img = new Image()
       img.onload = function ($event) {

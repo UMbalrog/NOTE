@@ -6,7 +6,7 @@
 
 # uni-app的特点
 
-- 开发者和案例更多：HBuilder装机量380万台，开发者社区月活百万，70多个QQ微信群承载10万人。案例众多，uni统计月活2亿+（[详见](https://uniapp.dcloud.io/case)）
+- 开发者和案例更多：HBuilder装机量470万台，开发者社区月活百万，70多个QQ微信群承载10万人。案例众多，uni统计月活8.4亿（[详见](https://uniapp.dcloud.io/case)）
 - 性能更高（见[评测](https://juejin.im/post/5ca1736af265da30ae314248)）
 - 更丰富的周边生态，[插件市场](https://ext.dcloud.net.cn/)数千款插件
 - 提供比小程序原生开发更好的开发体验、更高的工程化效率
@@ -15,7 +15,7 @@
 
 ## 扫码体验
 
-一套代码编译到8个平台，开发一次、多处运行，这不是梦想，而是现实。依次扫描8个二维码，亲自体验最全面的跨平台效果！
+开发一次，编译到8个平台。依次扫描8个二维码，亲自体验最全面的跨平台效果！
 
 <img src="https://img-cdn-qiniu.dcloud.net.cn/uni-app-qr-all.jpg"/>
 
@@ -48,7 +48,7 @@
 
 ## 插件市场
 
-`uni-app`有丰富的插件生态，众多开发者提交了各种组件、sdk、项目模板，详见：[https://ext.dcloud.net.cn/](https://ext.dcloud.net.cn/)
+`uni-app`有丰富的插件生态，众多开发者提交了数千款组件、sdk、项目模板，详见：[https://ext.dcloud.net.cn/](https://ext.dcloud.net.cn/)
 
 除了众多三方ui库，官方还提供了uni-ui，在性能和跨端兼容方面有更强的优势。详见：[https://ext.dcloud.net.cn/plugin?id=55](https://ext.dcloud.net.cn/plugin?id=55)
 
@@ -73,9 +73,10 @@
 - 答：不是。大量开发者用uni-app只做一个端，详见[案例](https://uniapp.dcloud.io/case)。对于开发者而言，一个优秀工具在手，做什么都不愁。
 
 - 问：uni-app以后会不会变更开源协议，转向收费？
-- 答：官方承诺永远不会变更开源协议。无论HBuilderX、uni-app、5+app，面向中国人永久免费。
+- 答：官方承诺永远不会变更开源协议。无论HBuilderX、uni-app、App，面向中国人永久免费。
 
 ## 更多资料
 
+- 评测：[跨端开发框架深度横评之2020版](https://juejin.im/post/5e8e8d5a6fb9a03c6d3d9f42)
 - 评测：[深入测试一周，主流多端框架大比武](https://mp.weixin.qq.com/s/jIDEHfuMnED6HTfNgjsW4w)
 - [uni-app在App端和flutter、react native的比较](https://ask.dcloud.net.cn/article/36083)

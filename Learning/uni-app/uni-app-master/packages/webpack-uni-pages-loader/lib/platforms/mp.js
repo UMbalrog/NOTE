@@ -22,19 +22,19 @@ function defaultCopy (name, value, json) {
 }
 
 const pagesJson2AppJson = {
-  'globalStyle': function (name, value, json) {
-    json['window'] = parseStyle(value)
-    if (json['window'].usingComponents) {
-      json['usingComponents'] = json['window'].usingComponents
-      delete json['window']['usingComponents']
+  globalStyle: function (name, value, json) {
+    json.window = parseStyle(value)
+    if (json.window.usingComponents) {
+      json.usingComponents = json.window.usingComponents
+      delete json.window.usingComponents
     } else {
-      json['usingComponents'] = {}
+      json.usingComponents = {}
     }
   },
-  'tabBar': function (name, value, json, fromJson) {
+  tabBar: function (name, value, json, fromJson) {
     if (value && value.list && value.list.length) {
       if (value.list.length < 2) {
-        console.error(`tabBar.list 需至少包含2项`)
+        console.error('tabBar.list 需至少包含2项')
       }
       const pages = json.pages
       value.list.forEach((page, index) => {
@@ -58,57 +58,56 @@ const pagesJson2AppJson = {
     }
     json[name] = value
   },
-  'preloadRule': defaultCopy,
-  'workers': defaultCopy
+  preloadRule: defaultCopy,
+  workers: defaultCopy
 }
 
 const manifestJson2AppJson = {
-  'networkTimeout': defaultCopy,
-  'debug': defaultCopy
+  networkTimeout: defaultCopy,
+  debug: defaultCopy
 }
 
-const pagesJson2ProjectJson = {
-  'condition': function (name, value, json) {
-    if (process.env.NODE_ENV === 'development') { // 仅开发期间 condition 生效
-      // 启动Condition
-      const condition = getCondition(value)
-      if (condition) {
-        if (!json.condition) {
-          json.condition = {}
-        }
-        process.UNI_CONDITION = condition // app-plus编译时，需要获取该参数
-        json.condition.miniprogram = condition
+function parseCondition (projectJson, pagesJson) {
+  if (process.env.NODE_ENV === 'development') { // 仅开发期间 condition 生效
+    // 启动Condition
+    const condition = getCondition(pagesJson)
+    if (condition) {
+      if (!projectJson.condition) {
+        projectJson.condition = {}
       }
+      projectJson.condition.miniprogram = condition
     }
   }
 }
 
+const pagesJson2ProjectJson = {}
+
 const manifestJson2ProjectJson = {
 
-  'name': function (name, value, json) {
+  name: function (name, value, json) {
     if (!value) {
       value = path.basename(process.env.UNI_INPUT_DIR)
       if (value === 'src') {
         value = path.basename(path.dirname(process.env.UNI_INPUT_DIR))
       }
     }
-    json['projectname'] = value
+    json.projectname = value
   }
 }
 
 const platformJson2ProjectJson = {
-  'appid': defaultCopy,
-  'setting': defaultCopy,
-  'miniprogramRoot': defaultCopy,
-  'cloudfunctionRoot': defaultCopy,
-  'qcloudRoot': defaultCopy,
-  'pluginRoot': defaultCopy,
-  'compileType': defaultCopy,
-  'libVersion': defaultCopy,
-  'projectname': defaultCopy,
-  'packOptions': defaultCopy,
-  'debugOptions': defaultCopy,
-  'scripts': defaultCopy
+  appid: defaultCopy,
+  setting: defaultCopy,
+  miniprogramRoot: defaultCopy,
+  cloudfunctionRoot: defaultCopy,
+  qcloudRoot: defaultCopy,
+  pluginRoot: defaultCopy,
+  compileType: defaultCopy,
+  libVersion: defaultCopy,
+  projectname: defaultCopy,
+  packOptions: defaultCopy,
+  debugOptions: defaultCopy,
+  scripts: defaultCopy
 }
 
 function copyToJson (json, fromJson, options) {
@@ -119,15 +118,16 @@ function copyToJson (json, fromJson, options) {
   })
 }
 
-function getCondition (condition) {
+function getCondition (pagesJson) {
+  const condition = pagesJson.condition
   const launchPagePath = process.env.UNI_CLI_LAUNCH_PAGE_PATH || ''
   const launchPageQuery = process.env.UNI_CLI_LAUNCH_PAGE_QUERY || ''
 
   const launchPageOptions = {
-    'id': 0,
-    'name': launchPagePath, // 模式名称
-    'pathName': launchPagePath, // 启动页面，必选
-    'query': launchPageQuery // 启动参数，在页面的onLoad函数里面得到。
+    id: 0,
+    name: launchPagePath, // 模式名称
+    pathName: launchPagePath, // 启动页面，必选
+    query: launchPageQuery // 启动参数，在页面的onLoad函数里面得到。
   }
   if (condition) {
     let current = -1
@@ -158,10 +158,11 @@ function getCondition (condition) {
     }
   }
   if (launchPagePath) {
-    return {
-      'current': 0,
-      'list': [launchPageOptions]
+    pagesJson.condition = {
+      current: 0,
+      list: [launchPageOptions]
     }
+    return pagesJson.condition
   }
   return false
 }
@@ -249,6 +250,8 @@ module.exports = function (pagesJson, manifestJson, project = {}) {
       }
     }
   } else {
+    parseCondition(project, pagesJson)
+
     copyToJson(project, pagesJson, pagesJson2ProjectJson)
 
     copyToJson(project, manifestJson, manifestJson2ProjectJson)

@@ -4,6 +4,10 @@ import {
   normalizeDataset
 } from 'uni-helpers/index'
 
+import {
+  findElm
+} from './util'
+
 function getRect (rect) {
   return {
     bottom: rect.bottom,
@@ -19,21 +23,24 @@ const intersectionObservers = {}
 
 export function requestComponentObserver ({
   reqId,
+  component,
   options
 }, pageId) {
   const pages = getCurrentPages()
 
-  const pageVm = pages.find(page => page.$page.id === pageId)
+  const page = pages.find(page => page.$page.id === pageId)
 
-  if (!pageVm) {
+  if (!page) {
     throw new Error(`Not Found：Page[${pageId}]`)
   }
 
-  const $el = pageVm.$el
+  const pageVm = page.$vm
+
+  const $el = findElm(component, pageVm)
 
   const root = options.relativeToSelector ? $el.querySelector(options.relativeToSelector) : null
 
-  let intersectionObserver = intersectionObservers[reqId] = new IntersectionObserver((entries, observer) => {
+  const intersectionObserver = intersectionObservers[reqId] = new IntersectionObserver((entries, observer) => {
     entries.forEach(entrie => {
       UniViewJSBridge.publishHandler('onRequestComponentObserver', {
         reqId,
@@ -64,7 +71,9 @@ export function requestComponentObserver ({
   }
 }
 
-export function destroyComponentObserver ({ reqId }) {
+export function destroyComponentObserver ({
+  reqId
+}) {
   const intersectionObserver = intersectionObservers[reqId]
   if (intersectionObserver) {
     intersectionObserver.disconnect()

@@ -6,7 +6,7 @@ import {
   publish
 } from '../../bridge'
 
-export function previewImage ({
+export function previewImagePlus ({
   current = 0,
   background = '#000000',
   indicator = 'number',
@@ -33,7 +33,7 @@ export function previewImage ({
       let itemList = []
       let itemColor = ''
       let title = ''
-      let hasLongPressActions = longPressActions && longPressActions.callbackId
+      const hasLongPressActions = longPressActions && longPressActions.callbackId
       if (!hasLongPressActions) {
         itemList = ['保存相册']
         itemColor = '#000000'

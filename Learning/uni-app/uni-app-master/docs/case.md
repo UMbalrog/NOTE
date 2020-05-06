@@ -1,6 +1,10 @@
-DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手机终端9亿，月活2.2亿。是开发者数量和案例最丰富的多端开发框架。
+DCloud有**470万**开发者，[uni统计](https://tongji.dcloud.net.cn/)手机端月活**8.4亿**。是开发者数量和案例最丰富的多端开发框架。
 
 欢迎知名开发商提交案例或接入uni统计，[项目案例征集](https://github.com/dcloudio/uni-app/issues/6)提交。
+
+### 新冠抗疫专区案例
+
+uni-app助力数百家单位快速上线**抗疫系统**，开源众多项目，详见专题：[xinguan2020.dcloud.net.cn](https://dcloud.io/ncp.html)
 
 ### 官方示例
 
@@ -37,6 +41,17 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 ### 第三方开发者案例
 
+<a href="https://zqact.tenpay.com/chaogu/" target="_blank" class="clear-style"><b>腾讯全民模拟炒股大赛：</b></a> 由腾讯金融科技倾力打造的证券投资者教育平台。
+<div style="display:flex;justify-content: space-around;">
+	<a href="javascript:;" target="_blank" class="clear-style barcode-view">
+		<img src="https://img.cdn.aliyun.dcloud.net.cn/uni-app/case/tx-chaogu-mp-weixin.jpg" width="200"/>
+		<span style="margin-top:15px;">微信小程序码</span>
+	</a>
+    <a href="javascript:;" target="_blank" class="clear-style barcode-view">
+		<img src="https://img.cdn.aliyun.dcloud.net.cn/uni-app/case/tx-chaogu-h5.png" width="200"/>
+		<span style="margin-top:15px;">H5码（请使用微信扫码）</span>
+	</a>
+</div>
 
 <a href="https://www.csdn.net/" target="_blank" class="clear-style"><b>CSDN：</b></a> 专业 IT 技术社区，致力于为中国软件开发者提供知识传播、在线学习、职业发展等全生命周期服务。
 <div style="display:flex;justify-content: space-around;">
@@ -98,7 +113,7 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 	</a>
 </div>
 
-<b>垃圾分类：</b>垃圾分一分，环境美十分。参与垃圾分类，保护地球家园，共创美好世界。
+<!-- <b>垃圾分类：</b>垃圾分一分，环境美十分。参与垃圾分类，保护地球家园，共创美好世界。
 <div style="display:flex;justify-content: space-around;">
 	<a href="#" class="clear-style barcode-view">
 		<img src="https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/wastesep-mp-weixin.png" width="200"/>
@@ -114,9 +129,9 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 	</a>
     <a href="#" class="clear-style barcode-view">
 		<img src="https://img-cdn-qiniu.dcloud.net.cn/uniapp/doc/wastesep-mp-toutiao.png" width="200"/>
-		<span style="margin-top:15px;">头条小程序码</span>
+		<span style="margin-top:15px;">字节跳动小程序码</span>
 	</a>
-</div>
+</div> -->
 
 
 <!-- <a href="//m3w.cn/__uni__4c6db6e" target="_blank" class="clear-style"><b>UniApp视频教程：</b></a>视频教育App，帮助开发者学习了解uni-app、h5+、mui等DCloud产品。开发者枫桥。
@@ -138,14 +153,23 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 #### 互联网公司
 
-**中华英才网：** 百度小程序搜索“中华英才网”
+**腾讯：** 微信小程序搜索“腾讯全民模拟炒股大赛”
 
-**当当网：** [H5](https://dh5.dangdang.com/)
+**华为：** 微信小程序搜索“荣耀亲选商城”、[H5](https://m.qinxuan.honor.cn/)
 
-**联想集团官方小程序：** 微信小程序搜索 “联想集团”
-  
+**京东：** 京东开发的新冠抗疫服务平台。[H5](http://yingji-h5.chanye.jdcloud.com/)
+
 <div class="scan-code">
- <strong>vivo 会员官方小程序：</strong> 微信小程序搜索 “vivo会员”
+ <strong>vivo商城官方小程序：</strong> 支付宝搜索 "vivo"，或鼠标移此查看[支付宝小程序码]
+ <div class="scan-code-hover">
+    <div class="scan-code-hover-box">
+      <img src="https://img.cdn.aliyun.dcloud.net.cn/uni-app/case/vivo-mall.png" alt="二维码获取失败" />
+    </div>
+ </div>
+</div>
+
+<div class="scan-code">
+ <strong>vivo会员官方小程序：</strong> 微信小程序搜索 "vivo会员"，或鼠标移此查看[微信小程序码]
  <div class="scan-code-hover">
     <div class="scan-code-hover-box">
       <img src="https://img.cdn.aliyun.dcloud.net.cn/uni-app/vivovip.jpg" alt="二维码获取失败" />
@@ -153,15 +177,35 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
  </div>
 </div>
 
+**联想集团官方小程序：** 微信小程序搜索 “联想集团”
+
+**中华英才网：** 百度小程序搜索“中华英才网”
+
+**CSDN：** 微信小程序搜索“CSDN”
+
+**开源中国：** 微信小程序搜索“osc+”、百度小程序搜索“开源中国社区”
+
+**当当网：** [H5](https://dh5.dangdang.com/)
+
+**太平洋汽车网：** H5，VR看车。需特定入口。
+  
 **西祠胡同：** [App官网扫码下载](https://www.xici.net/)、[H5](https://3g.xici.net/)
 
 **达内在线：** 达内教育的在线培训App。[App官网下载](http://www.tmooc.cn/app/index.shtml)
 
+#### 托管服务商
+
+**搜狐快站：** 可视化拖拽建站，例：[https://yiguob.kuaizhan.com/#/](https://yiguob.kuaizhan.com/#/)
+
 **即速应用：** 微信小程序搜索“即速应用商家版”
+
+**香橙：** 餐馆SaaS服务，为餐馆提供多端的手机点餐、下单、排队叫号、营销推广解决方案。[官网](http://ivcvc.com)
 
 #### 国企
 
 **中国移动咪咕商城：**[H5](https://mgmall.migudm.cn/)
+
+**北京移动：**App部分页面使用uni-app制作
 
 **浙江移动境外出行指南：**[H5](https://wap.zj.10086.cn/szhy/business/20190610gmh5/#/)
 
@@ -200,13 +244,21 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 **晋享生活（5+App）：**山西农信App，[Android](https://android.myapp.com/myapp/detail.htm?apkName=com.ydnsh.buy.mobileBank)、[iOS](https://apps.apple.com/cn/app/id1147645808)
 
-**平安集团：**金管家AI祝福，[H5](https://laip-gbr-pai.pingan.com/static/goodStart/#/)
+**苍南农商银行** 丰收联盟。[H5](https://wxmapp.zjcnbank.com/)
+
+**平安集团：**金管家多个页面，[H5](https://laip-gbr-pai.pingan.com/static/goodStart/#/)
 
 **拉卡拉收款宝：** App部分页面使用uni-app制作
 
 **长城人寿：**微信小程序搜索 “长城银保e站”、“长城人寿线上培训平台”等
 
+**华夏保险：** app部分页面使用uni-app制作
+
+**国泰君安：** app部分页面使用uni-app制作
+
 #### 政府
+
+**大量新冠抗疫项目，详见专题：**[xinguan2020.dcloud.net.cn](https://dcloud.io/ncp.html)
 
 **共青团全国青少年弘扬中华优秀传统文化交流展示活动专题网站：**[同时适配PC和手机版的H5](https://chuancheng.xwhdw.com/)
 
@@ -306,6 +358,8 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 **安徽法律服务网：**[H5](http://ah.12348.gov.cn/h5/#/)
 
+**赣服通：**江西政务办理[H5](http://ganfutong.jiangxi.gov.cn/jmopen/webapp/html5/unZip/0c39647d0c004736a23f7355c56a91b8/nkyy/#/)
+
 **江西赣州民政局社会救助**[微信H5](http://gzshjz.ganzhou.gov.cn/h5gz/)
 
 **山西晋城市政府晋来办：**[钉钉H5](https://bmfw.jcgov.gov.cn/app/aliPay/#/)
@@ -328,9 +382,11 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 **同济医院官方App：** [App官网下载页](https://tjhapp.com.cn/app/appdown.html)
 
+**张亮麻辣烫：** 百度小程序搜索 “张亮麻辣烫” 
+
 **碧桂园：**凤凰云[h5](https://fhyhub.bgy.com.cn/h5/activity/#/)
 
-**张亮麻辣烫：** 百度小程序搜索 “张亮麻辣烫” 
+**必胜客App：** 部分页面使用uni-app制作
 
 **西贝骑手：** 西贝莜面村外卖骑手App
 
@@ -342,6 +398,16 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 
 **国珍在线（5+App）：**新时代健康产业集团移动展业应用。[Android](http://sj.qq.com/myapp/detail.htm?apkName=cn.guozhen.guozhenzaixian)、[iOS](https://itunes.apple.com/cn/app/%E5%9B%BD%E7%8F%8D%E5%9C%A8%E7%BA%BF/id1098479063?mt=8)
 
+**太合音乐 秀动：**演出门票销售。[h5](https://wap.showstart.com/)
+
+**旺仔旺铺：**旺旺食品官方电商平台。[h5](https://srv.hotkidceo.com/store/)
+
+**贝因美：** [微信H5](http://mp.beingmate.com/h5/)
+
+**掌上春城：**昆明日报官媒。[h5](https://zsccv7.kmzscc.com/htmlv7/#/)
+
+**五粮液：** 内部管理系统
+
 #### html5游戏
 
 **信任的进化：** 曾Taptap首页推荐的益智小游戏。[Android](http://sj.qq.com/myapp/detail.htm?apkName=com.xuangames.xrdjh)、[iOS](https://itunes.apple.com/cn/app/%E4%BF%A1%E4%BB%BB%E7%9A%84%E8%BF%9B%E5%8C%96-%E5%90%88%E4%BD%9C%E8%87%AA%E7%A7%81%E7%9A%84%E5%9F%BA%E5%9B%A0/id1290206167?mt=8)
@@ -349,8 +415,6 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 **出发吧！冒险家：** 曾Taptap首页推荐的冒险游戏。[Android](https://www.seagame.com/mxj/android1.apk)、[iOS](https://apps.apple.com/cn/app/id1367825240)
 
 #### 创业公司
-
-**香橙：** 餐馆SaaS服务，为餐馆提供多端的手机点餐、下单、排队叫号、营销推广解决方案。[官网](http://ivcvc.com)
 
 **波比英语课堂：**幼儿英语启蒙，培养国际宝宝。[App、小程序通用链接](http://m3w.cn/bbyykt)
 
@@ -607,6 +671,8 @@ DCloud有380万开发者，[uni统计](https://tongji.dcloud.net.cn/)覆盖手�
 **军优会：**为军人谋福利，[App](https://m3w.cn/__uni__a8f4fdd)
 
 **京暖通：**专业的暖通供应和服务平台，[App和小程序通用链接](https://m3w.cn/jnt)
+
+**大丰收农资优选:**优质农资商品购物。[安卓](https://www.dfs168.com/market/viewapp.html?id=503)、[iOS](https://apps.apple.com/cn/app/id1489907205)、[H5](http://wechat.dfs168.com)、微信小程序搜索：大丰收农资优选
 
 
 

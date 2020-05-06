@@ -13,23 +13,23 @@
 
 |参数|说明|平台差异说明|
 |:-|:-|:-|
-|brand|手机品牌|5+App、微信小程序、百度小程序、头条小程序、QQ小程序|
+|brand|手机品牌|App、微信小程序、百度小程序、字节跳动小程序、QQ小程序|
 |model|手机型号||
 |pixelRatio|设备像素比||
 |screenWidth|屏幕宽度||
 |screenHeight|屏幕高度||
 |windowWidth|可使用窗口宽度||
 |windowHeight|可使用窗口高度||
-|windowTop|可使用窗口的顶部位置|5+App、H5|
-|windowBottom|可使用窗口的底部位置|5+App、H5|
-|statusBarHeight|状态栏的高度|头条小程序不支持|
+|windowTop|可使用窗口的顶部位置|App、H5|
+|windowBottom|可使用窗口的底部位置|App、H5|
+|statusBarHeight|状态栏的高度|字节跳动小程序不支持|
 |navigationBarHeight|导航栏的高度|百度小程序|
 |titleBarHeight|标题栏高度|支付宝小程序|
-|language|应用设置的语言|头条小程序不支持|
+|language|应用设置的语言|字节跳动小程序不支持|
 |version|引擎版本号|H5不支持|
 |storage|设备磁盘容量|支付宝小程序|
 |currentBattery|当前电量百分比|支付宝小程序|
-|appName|宿主APP名称|头条小程序|
+|appName|宿主APP名称|字节跳动小程序|
 |AppPlatform|App平台|QQ小程序|
 |host|宿主平台|百度小程序|
 |app|当前运行的客户端|支付宝小程序|
@@ -50,7 +50,8 @@
 |bluetoothEnabled	|	蓝牙的系统开关	|微信小程序|
 |locationEnabled	|	地理位置的系统开关	|微信小程序|
 |wifiEnabled	|	Wi-Fi 的系统开关	|微信小程序|
-|safeArea|在竖屏正方向下的安全区域|5+App、H5、微信小程序|
+|safeArea|在竖屏正方向下的安全区域|App、H5、微信小程序|
+|safeAreaInsets|在竖屏正方向下的安全区域插入位置（2.5.3+）|App、H5、微信小程序|
 
 **Tips**
 - 屏幕高度=状态栏高度+原生导航栏高度+可使用窗口高度+原生tabbar高度
@@ -67,6 +68,15 @@
 |bottom	|Number	|安全区域右下角纵坐标			|
 |width	|Number	|安全区域的宽度，单位逻辑像素	|
 |height	|Number	|安全区域的高度，单位逻辑像素	|
+
+**safeAreaInsets 的结构**
+
+|参数	|类型	|说明							|
+|:-		|:-								|:-								|
+|left	|Number	|安全区域左侧插入位置			|
+|right	|Number	|安全区域右侧插入位置			|
+|top	|Number	|安全区顶部插入位置			|
+|bottom	|Number	|安全区域底部插入位置			|
 
 
 **示例**
@@ -92,23 +102,23 @@ uni.getSystemInfo({
 
 |参数|说明|平台差异说明|
 |:-|:-|:-|
-|brand|手机品牌|5+App、微信小程序、百度小程序、头条小程序、QQ小程序|
+|brand|手机品牌|App、微信小程序、百度小程序、字节跳动小程序、QQ小程序|
 |model|手机型号||
 |pixelRatio|设备像素比||
 |screenWidth|屏幕宽度||
 |screenHeight|屏幕高度||
 |windowWidth|可使用窗口宽度||
 |windowHeight|可使用窗口高度||
-|windowTop|可使用窗口的顶部位置|5+App、H5|
-|windowBottom|可使用窗口的底部位置|5+App、H5|
-|statusBarHeight|状态栏的高度|头条小程序不支持|
+|windowTop|可使用窗口的顶部位置|App、H5|
+|windowBottom|可使用窗口的底部位置|App、H5|
+|statusBarHeight|状态栏的高度|字节跳动小程序不支持|
 |navigationBarHeight|导航栏的高度|百度小程序|
 |titleBarHeight|标题栏高度|支付宝小程序|
-|language|应用设置的语言|头条小程序不支持|
+|language|应用设置的语言|字节跳动小程序不支持|
 |version|引擎版本号|H5不支持|
 |storage|设备磁盘容量|支付宝小程序|
 |currentBattery|当前电量百分比|支付宝小程序|
-|appName|宿主APP名称|头条小程序|
+|appName|宿主APP名称|字节跳动小程序|
 |AppPlatform|App平台|QQ小程序|
 |host|宿主平台|百度小程序|
 |app|当前运行的客户端|支付宝小程序|
@@ -129,7 +139,8 @@ uni.getSystemInfo({
 |bluetoothEnabled	|	蓝牙的系统开关	|微信小程序|
 |locationEnabled	|	地理位置的系统开关	|微信小程序|
 |wifiEnabled	|	Wi-Fi 的系统开关	|微信小程序|
-|safeArea|在竖屏正方向下的安全区域|5+App、H5、微信小程序|
+|safeArea|在竖屏正方向下的安全区域|App、H5、微信小程序|
+|safeAreaInsets|在竖屏正方向下的安全区域插入位置（2.5.3+）|App、H5、微信小程序|
 
 **Tips**
 - 使用注意同上getSystemInfo
@@ -145,6 +156,14 @@ uni.getSystemInfo({
 |width	|Number	|安全区域的宽度，单位逻辑像素	|
 |height	|Number	|安全区域的高度，单位逻辑像素	|
 
+**safeAreaInsets 的结构**
+
+|参数	|类型	|说明							|
+|:-		|:-								|:-								|
+|left	|Number	|安全区域左侧插入位置			|
+|right	|Number	|安全区域右侧插入位置			|
+|top	|Number	|安全区顶部插入位置			|
+|bottom	|Number	|安全区域底部插入位置			|
 
 **示例**
 
@@ -192,7 +211,7 @@ Android10以上，部分国产手机支持OAID，详见[匿名设备标识符（
 
 平台差异说明
 
-|5+App|H5|微信小程序|支付宝小程序|百度小程序|头条小程序|QQ程序|
+|App|H5|微信小程序|支付宝小程序|百度小程序|字节跳动小程序|QQ程序|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |√|x|√|√|√|√|√|
 

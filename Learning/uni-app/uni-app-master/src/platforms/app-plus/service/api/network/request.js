@@ -1,4 +1,8 @@
 import {
+  hasOwn
+} from 'uni-shared'
+
+import {
   publish,
   requireNativePlugin,
   base64ToArrayBuffer
@@ -30,6 +34,17 @@ export function createRequestTaskById (requestTaskId, {
     if (!hasContentType && name.toLowerCase() === 'content-type') {
       hasContentType = true
       headers['Content-Type'] = header[name]
+      // TODO 需要重构
+      if (method !== 'GET' && header[name].indexOf('application/x-www-form-urlencoded') === 0 && typeof data !==
+        'string' && !(data instanceof ArrayBuffer)) {
+        const bodyArray = []
+        for (const key in data) {
+          if (hasOwn(data, key)) {
+            bodyArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+          }
+        }
+        data = bodyArray.join('&')
+      }
     } else {
       headers[name] = header[name]
     }
@@ -49,7 +64,7 @@ export function createRequestTaskById (requestTaskId, {
         statusCode: 0,
         errMsg: 'timeout'
       })
-    }, timeout)
+    }, (timeout + 200)) // TODO +200 发消息到原生层有时间开销，以后考虑由原生层回调超时
   }
   const options = {
     method,
@@ -92,7 +107,7 @@ export function createRequestTaskById (requestTaskId, {
           requestTaskId,
           state: 'fail',
           statusCode,
-          errMsg: 'abort'
+          errMsg: 'abort statusCode:' + statusCode
         })
       }
     })

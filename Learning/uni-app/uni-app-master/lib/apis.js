@@ -59,7 +59,8 @@ const media = [
   'saveVideoToPhotosAlbum',
   'createVideoContext',
   'createCameraContext',
-  'createLivePlayerContext'
+  'createLivePlayerContext',
+  'createLivePusherContext'
 ]
 
 const device = [
@@ -111,7 +112,11 @@ const device = [
   'onBeaconUpdate',
   'getBeacons',
   'startBeaconDiscovery',
-  'stopBeaconDiscovery'
+  'stopBeaconDiscovery',
+  'checkIsSupportSoterAuthentication',
+  'checkIsSoterEnrolledInDevice',
+  'startSoterAuthentication',
+  'onUIStyleChange'
 ]
 
 const keyboard = [
@@ -149,7 +154,8 @@ const ui = [
   'startPullDownRefresh',
   'stopPullDownRefresh',
   'createSelectorQuery',
-  'createIntersectionObserver'
+  'createIntersectionObserver',
+  'getMenuButtonBoundingClientRect'
 ]
 
 const event = [
@@ -183,6 +189,7 @@ const third = [
   'checkSession',
   'getUserInfo',
   'share',
+  'shareWithSystem',
   'showShareMenu',
   'hideShareMenu',
   'requestPayment',
@@ -191,7 +198,17 @@ const third = [
   'onPush',
   'offPush',
   'requireNativePlugin',
-  'upx2px'
+  'upx2px',
+  'restoreGlobal',
+  'getSubNVueById',
+  'getCurrentSubNVue',
+  'setPageMeta',
+  'onNativeEventReceive',
+  'sendNativeEvent'
+]
+
+const ad = [
+  'createRewardedVideoAd'
 ]
 
 const apis = [
@@ -207,7 +224,8 @@ const apis = [
   ...event,
   ...file,
   ...canvas,
-  ...third
+  ...third,
+  ...ad
 ]
 
 module.exports = apis

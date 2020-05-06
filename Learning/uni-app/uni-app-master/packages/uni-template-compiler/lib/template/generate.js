@@ -1,4 +1,8 @@
 const {
+  hasOwn
+} = require('../util')
+
+const {
   SELF_CLOSING_TAGS,
   INTERNAL_EVENT_LINK
 } = require('../constants')
@@ -6,27 +10,27 @@ const {
 function processElement (ast, state, isRoot) {
   const platformName = state.options.platform.name
   // <template slot="f"></template>
-  if (ast.type === 'template' && ast.attr.hasOwnProperty('slot')) {
+  if (ast.type === 'template' && hasOwn(ast.attr, 'slot')) {
     ast.type = 'view'
   }
 
-  if (ast.attr.hasOwnProperty('textContent')) {
-    ast.children = [ast.attr['textContent']]
-    delete ast.attr['textContent']
+  if (hasOwn(ast.attr, 'textContent')) {
+    ast.children = [ast.attr.textContent]
+    delete ast.attr.textContent
   }
-  if (ast.attr.hasOwnProperty('innerHTML')) {
+  if (hasOwn(ast.attr, 'innerHTML')) {
     ast.children = [{
       type: 'rich-text',
       attr: {
-        nodes: ast.attr['innerHTML']
+        nodes: ast.attr.innerHTML
       },
       children: []
     }]
-    delete ast.attr['innerHTML']
+    delete ast.attr.innerHTML
   }
   if (state.options.platform.isComponent(ast.type)) {
     if (platformName === 'mp-alipay') {
-      ast.attr['onVueInit'] = INTERNAL_EVENT_LINK
+      ast.attr.onVueInit = INTERNAL_EVENT_LINK
     } else if (platformName !== 'mp-baidu') {
       ast.attr['bind:' + INTERNAL_EVENT_LINK] = INTERNAL_EVENT_LINK
     }
@@ -59,10 +63,10 @@ function processElement (ast, state, isRoot) {
     if (slots.length && platformName !== 'mp-alipay') { // 标记 slots
       ast.attr['vue-slots'] = '{{[' + slots.reverse().map(slotName => `'${slotName}'`).join(',') + ']}}'
     }
-    if (ast.attr['id'] && ast.attr['id'].indexOf('{{') === 0) {
+    if (ast.attr.id && ast.attr.id.indexOf('{{') === 0) {
       state.tips.add(`id 作为属性保留名,不允许在自定义组件 ${ast.type} 中定义为 props`)
     }
-    if (ast.attr.hasOwnProperty('data')) { // 百度中会出现异常情况
+    if (hasOwn(ast.attr, 'data')) { // 百度中会出现异常情况
       state.tips.add(`data 作为属性保留名,不允许在自定义组件 ${ast.type} 中定义为 props`)
     }
   }
@@ -81,17 +85,17 @@ function genElement (ast, state, isRoot = false) {
   const names = Object.keys(ast.attr)
   const props = names.length
     ? ' ' +
-        names
-          .map(name => {
-            if (name.includes(':else')) {
-              return name
-            }
-            if (ast.attr[name] === '' && name !== 'value') { // value属性需要保留=''
-              return name
-            }
-            return `${name}="${ast.attr[name]}"`
-          })
-          .join(' ')
+    names
+      .map(name => {
+        if (name.includes(':else')) {
+          return name
+        }
+        if (ast.attr[name] === '' && name !== 'value') { // value属性需要保留=''
+          return name
+        }
+        return `${name}="${ast.attr[name]}"`
+      })
+      .join(' ')
     : ''
   if (SELF_CLOSING_TAGS.includes(ast.type)) {
     return `<${ast.type}${props}/>`
@@ -113,7 +117,20 @@ function genText (ast, state) {
   return ast
 }
 
+function parsePageMeta (ast, state) {
+  // 目前仅 mp-weixin 支持 page-meta
+  if (state.options.platform.name === 'mp-weixin') {
+    const children = ast.children
+    if (Array.isArray(children) && children.find(child => child.type === 'page-meta')) {
+      return children
+    }
+  }
+  return ast
+}
+
 module.exports = function generate (ast, state) {
+  ast = parsePageMeta(ast, state)
+
   if (!Array.isArray(ast)) {
     ast = [ast]
   }
@@ -123,7 +140,7 @@ module.exports = function generate (ast, state) {
   const replaceCodes = state.options.replaceCodes
   if (replaceCodes) {
     Object.keys(replaceCodes).forEach(key => {
-      code = code.replace(key, replaceCodes[key])
+      code = code.replace(new RegExp(key.replace('$', '\\$'), 'g'), replaceCodes[key])
     })
   }
 

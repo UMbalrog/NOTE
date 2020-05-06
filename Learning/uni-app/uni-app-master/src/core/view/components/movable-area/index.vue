@@ -1,4 +1,9 @@
 <script>
+import {
+  disableScrollBounce,
+  deepClone
+} from 'uni-shared'
+
 function calc (e) {
   return Math.sqrt(e.x * e.x + e.y * e.y)
 }
@@ -37,6 +42,7 @@ export default {
     },
     _find (target, items = this.items) {
       var root = this.$el
+
       function get (node) {
         for (let i = 0; i < items.length; i++) {
           const item = items[i]
@@ -52,6 +58,9 @@ export default {
       return get(target)
     },
     _touchstart (t) {
+      disableScrollBounce({
+        disable: true
+      })
       var i = t.touches
       if (i) {
         if (i.length > 1) {
@@ -87,6 +96,9 @@ export default {
       }
     },
     _touchend (e) {
+      disableScrollBounce({
+        disable: false
+      })
       var t = e.touches
       if (!(t && t.length)) {
         if (e.changedTouches) {
@@ -131,8 +143,9 @@ export default {
   },
   render (createElement) {
     var items = []
-    if (this.$slots.default) {
-      this.$slots.default.forEach(vnode => {
+    const $slots = this.$slots.default && deepClone(this.$slots.default, createElement)
+    if ($slots) {
+      $slots.forEach(vnode => {
         if (vnode.componentOptions && vnode.componentOptions.tag === 'v-uni-movable-view') {
           items.push(vnode)
         }
@@ -152,19 +165,19 @@ export default {
       on: {
         resize: this._resize
       }
-    }), ...items])
+    }), $slots])
   }
 }
 </script>
 <style>
-uni-movable-area {
-  display: block;
-  position: relative;
-  width: 10px;
-  height: 10px;
-}
+  uni-movable-area {
+    display: block;
+    position: relative;
+    width: 10px;
+    height: 10px;
+  }
 
-uni-movable-area[hidden] {
-  display: none;
-}
+  uni-movable-area[hidden] {
+    display: none;
+  }
 </style>

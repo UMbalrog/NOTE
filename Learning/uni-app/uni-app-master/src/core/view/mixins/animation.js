@@ -19,13 +19,13 @@ function converType (type) {
 function getStyle (action) {
   const animateTypes1 = ['matrix', 'matrix3d', 'scale', 'scale3d', 'rotate3d', 'skew', 'translate', 'translate3d']
   const animateTypes2 = ['scaleX', 'scaleY', 'scaleZ', 'rotate', 'rotateX', 'rotateY', 'rotateZ', 'skewX', 'skewY', 'translateX', 'translateY', 'translateZ']
-  const animateTypes3 = ['opacity', 'backgroundColor']
+  const animateTypes3 = ['opacity', 'background-color']
   const animateTypes4 = ['width', 'height', 'left', 'right', 'top', 'bottom']
   const animates = action.animates
   const option = action.option
   const transition = option.transition
   const style = {}
-  let transform = []
+  const transform = []
   animates.forEach(animate => {
     let type = animate.type
     let args = [...animate.args]
@@ -35,7 +35,7 @@ function getStyle (action) {
       } else if (type.startsWith('translate')) {
         args = args.map(converPx)
       }
-      if (animateTypes2.indexOf(type)) {
+      if (animateTypes2.indexOf(type) >= 0) {
         args.length = 1
       }
       transform.push(`${type}(${args.join(',')})`)

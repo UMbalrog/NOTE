@@ -30,7 +30,7 @@ const hooks = [
 hooks.push(...PAGE_EVENT_HOOKS)
 
 export default function parsePage (vuePageOptions) {
-  let [VueComponent, vueOptions] = initVueComponent(Vue, vuePageOptions)
+  const [VueComponent, vueOptions] = initVueComponent(Vue, vuePageOptions)
 
   const pageOptions = {
     mixins: initBehaviors(vueOptions, initBehavior),
@@ -64,6 +64,12 @@ export default function parsePage (vuePageOptions) {
     onUnload () {
       this.$vm.__call_hook('onUnload')
       this.$vm.$destroy()
+    },
+    events: {
+      // 支付宝小程序有些页面事件只能放在events下
+      onBack () {
+        this.$vm.__call_hook('onBackPress')
+      }
     },
     __r: handleRef,
     __e: handleEvent,

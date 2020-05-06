@@ -4,6 +4,7 @@
   * [uni.base64ToArrayBuffer](api/base64ToArrayBuffer?id=base64toarraybuffer)
   * [uni.arrayBufferToBase64](api/arrayBufferToBase64?id=arraybuffertobase64)
   * [生命周期](api/lifecycle.md)
+  * [应用级事件](api/application.md)
 * 网络
   * [发起请求](api/request/request.md)
   * [上传、下载](api/request/network-file.md)
@@ -43,10 +44,12 @@
   * [相机组件控制](api/media/camera-context.md)
   * [直播组件控制](api/media/live-player-context.md)
   * [富文本](api/media/editor-context.md)
+  * [音视频合成](api/media/media-container.md)
 * 设备
   * [系统信息](api/system/info.md)
   * [内存](api/system/memory.md)
   * [网络状态](api/system/network.md)
+  * [系统主题](api/system/theme.md)
   * [加速度计](api/system/accelerometer.md)
   * [罗盘](api/system/compass.md)
   * [陀螺仪](api/system/gyroscope.md)
@@ -103,6 +106,9 @@
 	* [uni.canvasGetImageData](api/canvas/canvasGetImageData.md)
 	* [CanvasContext](api/canvas/CanvasContext.md)
 	* [CanvasGradient](api/canvas/CanvasGradient.md)
+* 广告
+  * [激励视频广告](api/ad/rewarded-video-ad.md)
+  * [插屏广告](api/ad/interstitial-ad.md)
 * 第三方服务
   * [获取服务供应商](api/plugins/provider.md)
   * [登录](api/plugins/login.md)
@@ -127,7 +133,8 @@
   * [小程序更新](api/other/update.md)
   * [调试](api/other/set-enable-debug.md)
   * [获取第三方平台数据](api/other/get-extconfig.md)
-  * [广告](api/other/advertisement.md)
+
+
 <li></li>
 <div class="contact-box">
   <a href="//ask.dcloud.net.cn/explore/" target="_blank" class="contact-item">

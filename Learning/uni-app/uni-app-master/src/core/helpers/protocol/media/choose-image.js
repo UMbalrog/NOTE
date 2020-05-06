@@ -2,7 +2,7 @@ const SIZE_TYPES = ['original', 'compressed']
 const SOURCE_TYPES = ['album', 'camera']
 
 export const chooseImage = {
-  'count': {
+  count: {
     type: Number,
     required: false,
     default: 9,
@@ -12,8 +12,8 @@ export const chooseImage = {
       }
     }
   },
-  'sizeType': {
-    type: Array,
+  sizeType: {
+    type: [Array, String],
     required: false,
     default: SIZE_TYPES,
     validator (sizeType, params) {
@@ -21,6 +21,10 @@ export const chooseImage = {
       const length = sizeType.length
       if (!length) {
         params.sizeType = SIZE_TYPES
+      } else if (typeof sizeType === 'string') {
+        if (!~SIZE_TYPES.indexOf(sizeType)) {
+          params.sizeType = SIZE_TYPES
+        }
       } else {
         for (let i = 0; i < length; i++) {
           if (typeof sizeType[i] !== 'string' || !~SIZE_TYPES.indexOf(sizeType[i])) {
@@ -31,7 +35,7 @@ export const chooseImage = {
       }
     }
   },
-  'sourceType': {
+  sourceType: {
     type: Array,
     required: false,
     default: SOURCE_TYPES,

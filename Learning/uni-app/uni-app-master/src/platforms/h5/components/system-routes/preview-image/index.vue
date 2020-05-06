@@ -1,18 +1,22 @@
 <template>
   <div
     class="uni-system-preview-image"
-    @click="_click">
+    @click="_click"
+  >
     <v-uni-swiper
       :current.sync="index"
       :indicator-dots="false"
       :autoplay="false"
-      class="uni-swiper">
+      class="uni-swiper"
+    >
       <v-uni-swiper-item
-        v-for="(src,index) in urls"
-        :key="index">
+        v-for="(src,key) in urls"
+        :key="key"
+      >
         <img
           :src="src"
-          class="uni-preview-image">
+          class="uni-preview-image"
+        >
       </v-uni-swiper-item>
     </v-uni-swiper>
   </div>
@@ -36,9 +40,26 @@ export default {
     const index = typeof this.current === 'number' ? this.current : this.urls.indexOf(this.current)
     this.index = index < 0 ? 0 : index
   },
+  mounted () {
+    const MAX_MOVE = 20
+    let x = 0
+    let y = 0
+    this.$el.addEventListener('mousedown', (event) => {
+      this.preventDefault = false
+      x = event.clientX
+      y = event.clientY
+    })
+    this.$el.addEventListener('mouseup', (event) => {
+      if (Math.abs(event.clientX - x) > MAX_MOVE || Math.abs(event.clientY - y) > MAX_MOVE) {
+        this.preventDefault = true
+      }
+    })
+  },
   methods: {
     _click () {
-      getApp().$router.back()
+      if (!this.preventDefault) {
+        getApp().$router.back()
+      }
     }
   }
 }

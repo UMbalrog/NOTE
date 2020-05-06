@@ -36,13 +36,13 @@ export default {
 }
 `,
       [{
-        'name': 'mediaList',
-        'value': 'mediaList',
-        'source': '@/components/tab-nvue/mediaList.vue'
+        name: 'mediaList',
+        value: 'mediaList',
+        source: '@/components/tab-nvue/mediaList.vue'
       }, {
-        'name': 'uniLoadMore',
-        'value': 'uniLoadMore',
-        'source': '@/components/uni-load-more.vue'
+        name: 'uniLoadMore',
+        value: 'uniLoadMore',
+        source: '@/components/uni-load-more.vue'
       }])
 
     assertCodegen(
@@ -56,14 +56,72 @@ export default {
             }
             `,
       [{
-        'name': 'uni-badge',
-        'value': 'uniBadge',
-        'source': '@dcloudio/uni-ui/lib/uni-badge/uni-badge'
+        name: 'uni-badge',
+        value: 'uniBadge',
+        source: '@dcloudio/uni-ui/lib/uni-badge/uni-badge'
       }, {
-        'name': 'uni-card',
-        'value': 'uniCard',
-        'source': '@dcloudio/uni-ui/lib/uni-card/uni-card'
+        name: 'uni-card',
+        value: 'uniCard',
+        source: '@dcloudio/uni-ui/lib/uni-card/uni-card'
       }])
+
+    assertCodegen(
+      `
+import VanIcon from '../icon/index.vue'
+import VanPopup from '../icon/popup.vue'
+import VanLoading from '../icon/loading.vue'
+global['__wxVueOptions'] = {
+  components:{
+    'van-icon': VanIcon,
+    'van-popup': VanPopup,
+    'van-loading': VanLoading
+  }
+}
+                `,
+      [{
+        name: 'van-icon',
+        value: 'VanIcon',
+        source: '../icon/index.vue'
+      },
+      {
+        name: 'van-popup',
+        value: 'VanPopup',
+        source: '../icon/popup.vue'
+      },
+      {
+        name: 'van-loading',
+        value: 'VanLoading',
+        source: '../icon/loading.vue'
+      }
+      ])
+
+    assertCodegen(
+      `
+      import VanIcon from '../icon/index.vue'
+      import VanPopup from '../icon/popup.vue'
+      import VanLoading from '../icon/loading.vue'
+      exports.default.components = Object.assign({
+          'van-icon': VanIcon,
+          'van-popup': VanPopup,
+          'van-loading': VanLoading
+        },exports.default.components || {})
+                      `,
+      [{
+        name: 'van-icon',
+        value: 'VanIcon',
+        source: '../icon/index.vue'
+      },
+      {
+        name: 'van-popup',
+        value: 'VanPopup',
+        source: '../icon/popup.vue'
+      },
+      {
+        name: 'van-loading',
+        value: 'VanLoading',
+        source: '../icon/loading.vue'
+      }
+      ])
   })
 
   it('parse global component', () => {
@@ -76,17 +134,17 @@ export default {
             Vue.component('media-list',mediaList)
             `,
       [{
-        'name': 'uni-badge',
-        'value': 'uniBadge',
-        'source': '@dcloudio/uni-ui/lib/uni-badge/uni-badge'
+        name: 'uni-badge',
+        value: 'uniBadge',
+        source: '@dcloudio/uni-ui/lib/uni-badge/uni-badge'
       }, {
-        'name': 'uni-card',
-        'value': 'uniCard',
-        'source': '@dcloudio/uni-ui/lib/uni-card/uni-card'
+        name: 'uni-card',
+        value: 'uniCard',
+        source: '@dcloudio/uni-ui/lib/uni-card/uni-card'
       }, {
-        'name': 'media-list',
-        'value': 'mediaList',
-        'source': '@/components/tab-nvue/mediaList.vue'
+        name: 'media-list',
+        value: 'mediaList',
+        source: '@/components/tab-nvue/mediaList.vue'
       }], false)
   })
 })

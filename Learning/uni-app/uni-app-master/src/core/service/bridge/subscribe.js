@@ -10,11 +10,12 @@ export default function initSubscribe (subscribe, {
 }) {
   function createPageEvent (eventType) {
     return function (args, pageId) {
+      pageId = parseInt(pageId)
       const pages = getCurrentPages()
       const page = pages.find(page => page.$page.id === pageId)
       if (page) {
         callPageHook(page, eventType, args)
-      } else {
+      } else if (process.env.NODE_ENV !== 'production') {
         console.error(`Not Found：Page[${pageId}]`)
       }
     }
@@ -49,7 +50,10 @@ export default function initSubscribe (subscribe, {
     }
   }
 
-  subscribe('onPageReady', createPageEvent('onReady'))
+  if (__PLATFORM__ === 'h5') {
+    subscribe('onPageReady', createPageEvent('onReady'))
+  }
+
   subscribe('onPageScroll', createPageEvent('onPageScroll'))
   subscribe('onReachBottom', createPageEvent('onReachBottom'))
 

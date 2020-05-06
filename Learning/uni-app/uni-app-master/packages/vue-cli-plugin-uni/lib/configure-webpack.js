@@ -6,6 +6,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const merge = require('webpack-merge')
 
+const {
+  getPartialIdentifier
+} = require('./util')
+
 function resolve (dir) {
   return path.resolve(__dirname, '..', dir)
 }
@@ -14,16 +18,18 @@ function resolveModule (dir) {
   return path.resolve(__dirname, '../../..', dir)
 }
 
-module.exports = function configureWebpack (platformOptions, manifestPlatformOptions, vueOptions) {
+module.exports = function configureWebpack (platformOptions, manifestPlatformOptions, vueOptions, api) {
   const {
     runByHBuilderX, // 使用 HBuilderX 运行
     isInHBuilderX, // 在 HBuilderX 的插件中
     hasModule,
-    getMainEntry,
-    getPlatformVue,
     jsPreprocessOptions,
     htmlPreprocessOptions
   } = require('@dcloudio/uni-cli-shared')
+
+  const {
+    getPlatformVue
+  } = require('@dcloudio/uni-cli-shared/lib/platform')
 
   const {
     getCopyWebpackPluginOptions
@@ -78,10 +84,10 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
         '@/*': [
           path.join(process.env.UNI_INPUT_DIR, '*')
         ],
-        'vue': [
+        vue: [
           resolveModule('vue')
         ],
-        'vuex': [
+        vuex: [
           resolveModule('vuex')
         ],
         'vue-class-component': [
@@ -90,7 +96,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
         'vue-property-decorator': [
           resolveModule('vue-property-decorator')
         ],
-        'tslib': [
+        tslib: [
           resolveModule('tslib')
         ],
         'mpvue-page-factory': [
@@ -103,7 +109,7 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       const filePath = path.relative(process.env.UNI_INPUT_DIR, error.file).replace('.vue.ts', '.vue')
       if (error.code === 2307 && error.content.includes('.vue')) {
         error.content = error.content.replace('Cannot find module ', '') +
-          ` script 节点必须使用 lang="ts",文档参考地址:https://uniapp.dcloud.io/frame?id=vue-ts`
+          ' script 节点必须使用 lang="ts",文档参考地址:https://uniapp.dcloud.io/frame?id=vue-ts'
       }
       return messageColor(
         `[tsl] ERROR at ${filePath}:${error.line}
@@ -134,23 +140,30 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       }
     }
   }
-
+  const babelLoaderRe = /^babel-loader|(\/|\\)babel-loader/
+  const cacheLoaderRe = /^cache-loader|(\/|\\)cache-loader/
   return function (webpackConfig) {
     // disable js cache-loader
     const rawRules = webpackConfig.module.rules
-
     for (let i = rawRules.length - 1; i >= 0; i--) {
       const uses = rawRules[i].use
       if (Array.isArray(uses)) {
-        if (uses.find(use => use.loader === 'babel-loader')) {
-          const index = uses.findIndex(use => use.loader === 'cache-loader')
-          uses.splice(index, 1)
+        if (uses.find(use => babelLoaderRe.test(use.loader))) {
+          const index = uses.findIndex(use => cacheLoaderRe.test(use.loader))
+          if (process.env.UNI_USING_CACHE) {
+            Object.assign(uses[index].options, api.genCacheConfig(
+              'babel-loader/' + process.env.UNI_PLATFORM,
+              getPartialIdentifier()
+            ))
+          } else {
+            uses.splice(index, 1)
+          }
         }
       }
     }
 
     // js preprocess
-    updateJsLoader(rawRules, 'foo.js', /^babel-loader/, {
+    updateJsLoader(rawRules, 'foo.js', babelLoaderRe, {
       loader: resolve('packages/webpack-preprocess-loader'),
       options: jsPreprocessOptions
     })
@@ -168,15 +181,22 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
 
     let platformWebpackConfig = platformOptions.webpackConfig
     if (typeof platformWebpackConfig === 'function') {
-      platformWebpackConfig = platformWebpackConfig(webpackConfig)
+      platformWebpackConfig = platformWebpackConfig(webpackConfig, vueOptions, api)
     }
     // 移除 node_modules 目录，避免受路径上的 node_modules 影响
     webpackConfig.resolve.modules = webpackConfig.resolve.modules.filter(module => module !==
       'node_modules')
 
-    const plugins = [
-      new CopyWebpackPlugin(getCopyWebpackPluginOptions(manifestPlatformOptions))
-    ]
+    const plugins = []
+
+    const isAppView = process.env.UNI_PLATFORM === 'app-plus' &&
+      vueOptions.pluginOptions &&
+      vueOptions.pluginOptions['uni-app-plus'] &&
+      vueOptions.pluginOptions['uni-app-plus'].view
+
+    if (!isAppView) { // app-plus view不需要copy
+      plugins.push(new CopyWebpackPlugin(getCopyWebpackPluginOptions(manifestPlatformOptions, vueOptions)))
+    }
 
     if (process.UNI_SCRIPT_ENV && Object.keys(process.UNI_SCRIPT_ENV).length) {
       // custom define
@@ -197,26 +217,6 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       }))
     }
 
-    let useBuiltIns = 'entry'
-    if (process.env.UNI_PLATFORM === 'h5') { // 兼容旧版本 h5
-      useBuiltIns = 'usage'
-      try {
-        const babelConfig = require(path.resolve(process.env.UNI_CLI_CONTEXT, 'babel.config.js'))
-        useBuiltIns = babelConfig.presets[0][1].useBuiltIns
-      } catch (e) {}
-    }
-
-    const statCode = process.env.UNI_USING_STAT ? `import '@dcloudio/uni-stat';` : ''
-
-    let beforeCode = ''
-
-    if (process.env.UNI_PLATFORM === 'h5') {
-      beforeCode = (useBuiltIns === 'entry' ? `import '@babel/polyfill';` : '') +
-        `import 'uni-pages';import 'uni-${process.env.UNI_PLATFORM}';`
-    } else {
-      beforeCode = `import 'uni-pages';`
-    }
-
     const rules = [{
       test: path.resolve(process.env.UNI_INPUT_DIR, 'pages.json'),
       use: [{
@@ -225,18 +225,6 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
         loader: '@dcloudio/webpack-uni-pages-loader'
       }],
       type: 'javascript/auto'
-    },
-    {
-      test: path.resolve(process.env.UNI_INPUT_DIR, getMainEntry()),
-      // resourceQuery: /type=wrapper/,
-      use: [{
-        loader: 'wrap-loader',
-        options: {
-          before: [
-            beforeCode + statCode
-          ]
-        }
-      }]
     },
     {
       resourceQuery: /vue&type=template/,
@@ -261,7 +249,8 @@ module.exports = function configureWebpack (platformOptions, manifestPlatformOpt
       resolve: {
         alias: {
           '@': path.resolve(process.env.UNI_INPUT_DIR),
-          'vue$': getPlatformVue(vueOptions),
+          './@': path.resolve(process.env.UNI_INPUT_DIR), // css中的'@/static/logo.png'会被转换成'./@/static/logo.png'加载
+          vue$: getPlatformVue(vueOptions),
           'uni-pages': path.resolve(process.env.UNI_INPUT_DIR, 'pages.json'),
           '@dcloudio/uni-stat': require.resolve('@dcloudio/uni-stat'),
           'uni-stat-config': path.resolve(process.env.UNI_INPUT_DIR, 'pages.json') +

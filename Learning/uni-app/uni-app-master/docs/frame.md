@@ -43,11 +43,85 @@
 
 |有效目录|说明|
 |:-:|:-:|
-|app-plus|5+App|
+|app-plus|App|
 |h5|H5|
 |mp-weixin|微信小程序|
 |mp-alipay|支付宝小程序|
 |mp-baidu|百度小程序|
+
+## 资源路径说明
+
+
+
+### 模板内引入静态资源
+
+> `template`内引入静态资源，如`image`、`video`等标签的`src`属性时，可以使用相对路径或者绝对路径，形式如下
+
+```html
+<!-- 绝对路径，/static指根目录下的static目录，在cli项目中/static指src目录下的static目录 -->
+<image class="logo" src="/static/logo.png"></image>
+<image class="logo" src="@/static/logo.png"></image>
+<!-- 相对路径 -->
+<image class="logo" src="../../static/logo.png"></image>
+```
+
+**注意**
+
+- `@`开头的绝对路径以及相对路径会经过base64转换规则校验
+- 引入的静态资源在非h5平台，均不转为base64。
+- H5平台，小于4kb的资源会被转换成base64，其余不转。
+- 自`HBuilderX 2.6.6-alpha`起`template`内支持`@`开头路径引入静态资源，旧版本不支持此方式
+- App平台自`HBuilderX 2.6.9-alpha`起`template`节点中引用静态资源文件时（如：图片），调整查找策略为【基于当前文件的路径搜索】，与其他平台保持一致
+- 支付宝小程序组件内 image 标签不可使用相对路径
+
+### js文件引入
+
+> `js`文件或`script`标签内（包括renderjs等）引入`js`文件时，可以使用相对路径和绝对路径，形式如下
+
+```js
+// 绝对路径，@指向项目根目录，在cli项目中@指向src目录
+import add from '@/common/add.js'
+// 相对路径
+import add from '../../common/add.js'
+```
+
+**注意**
+
+- js文件不支持使用`/`开头的方式引入
+
+### css引入静态资源
+
+> `css`文件或`style标签`内引入`css`文件时（scss、less文件同理），只能使用相对路径
+
+```css
+/* 绝对路径 */
+@import url('/common/uni.css');
+@import url('@/common/uni.css');
+/* 相对路径 */
+@import url('../../common/uni.css');
+```
+
+**注意**
+
+- 自`HBuilderX 2.6.6-alpha`起支持绝对路径引入静态资源，旧版本不支持此方式
+
+> `css`文件或`style标签`内引用的图片路径可以使用相对路径也可以使用绝对路径，需要注意的是，有些小程序端css文件不允许引用本地文件（请看注意事项）。
+
+```css
+/* 绝对路径 */
+background-image: url(/static/logo.png);
+background-image: url(@/static/logo.png);
+/* 相对路径 */
+background-image: url(../../static/logo.png);
+```
+
+**Tips**
+
+- 引入字体图标请参考，[字体图标](frame?id=字体图标)
+- `@`开头的绝对路径以及相对路径会经过base64转换规则校验
+- 不支持本地图片的平台，小于40kb，一定会转base64。（共四个平台mp-weixin, mp-qq, mp-toutiao, app v2）
+- h5平台，小于4kb会转base64，超出4kb时不转。
+- 其余平台不会转base64
 
 ## 生命周期
 
@@ -80,17 +154,17 @@
 |onReady|监听页面初次渲染完成。注意如果渲染速度快，会在页面进入动画完成前触发|||
 |onHide|监听页面隐藏|||
 |onUnload|监听页面卸载|||
-|onResize|监听窗口尺寸变化|5+App、微信小程序||
+|onResize|监听窗口尺寸变化|App、微信小程序||
 |onPullDownRefresh|监听用户下拉动作，一般用于下拉刷新，参考[示例](api/ui/pulldown)|||
 |onReachBottom|页面上拉触底事件的处理函数|||
-|onTabItemTap|点击 tab 时触发，参数为Object，具体见下方注意事项|微信小程序、百度小程序、H5、5+App（自定义组件模式）||
-|onShareAppMessage|用户点击右上角分享|微信小程序、百度小程序、头条小程序、支付宝小程序||
+|onTabItemTap|点击 tab 时触发，参数为Object，具体见下方注意事项|微信小程序、百度小程序、H5、App（自定义组件模式）||
+|onShareAppMessage|用户点击右上角分享|微信小程序、百度小程序、字节跳动小程序、支付宝小程序||
 |onPageScroll|监听页面滚动，参数为Object|||
 |onNavigationBarButtonTap|监听原生标题栏按钮点击事件，参数为Object|5+ App、H5||
-|onBackPress|监听页面返回，返回 event = {from:backbutton、 navigateBack} ，backbutton 表示来源是左上角返回按钮或 android 返回键；navigateBack表示来源是 uni.navigateBack ；详细说明及使用：[onBackPress 详解](http://ask.dcloud.net.cn/article/35120)|5+App、H5||
-|onNavigationBarSearchInputChanged|监听原生标题栏搜索输入框输入内容变化事件|5+App、H5|1.6.0|
-|onNavigationBarSearchInputConfirmed|监听原生标题栏搜索输入框搜索事件，用户点击软键盘上的“搜索”按钮时触发。|5+App、H5|1.6.0|
-|onNavigationBarSearchInputClicked|监听原生标题栏搜索输入框点击事件|5+App、H5|1.6.0|
+|onBackPress|监听页面返回，返回 event = {from:backbutton、 navigateBack} ，backbutton 表示来源是左上角返回按钮或 android 返回键；navigateBack表示来源是 uni.navigateBack ；详细说明及使用：[onBackPress 详解](http://ask.dcloud.net.cn/article/35120)|App、H5||
+|onNavigationBarSearchInputChanged|监听原生标题栏搜索输入框输入内容变化事件|App、H5|1.6.0|
+|onNavigationBarSearchInputConfirmed|监听原生标题栏搜索输入框搜索事件，用户点击软键盘上的“搜索”按钮时触发。|App、H5|1.6.0|
+|onNavigationBarSearchInputClicked|监听原生标题栏搜索输入框点击事件|App、H5|1.6.0|
 
 ``onPageScroll`` 参数说明：
 
@@ -235,7 +309,7 @@ switch(uni.getSystemInfoSync().platform){
 - rpx 即响应式px，一种根据屏幕宽度自适应的动态单位。以750宽的屏幕为基准，750rpx恰好为屏幕宽度。屏幕变宽，rpx 实际显示效果会等比放大。
 
 vue页面支持普通H5单位，但在nvue里不支持：
-- rem 默认根字体大小为 屏幕宽度/20（微信小程序、头条小程序、App、H5）<span style="display:none">百度小程序16px、支付宝小程序50px</span>
+- rem 默认根字体大小为 屏幕宽度/20（微信小程序、字节跳动小程序、App、H5）<span style="display:none">百度小程序16px、支付宝小程序50px</span>
 - vh viewpoint height，视窗高度，1vh等于视窗高度的1%
 - vw viewpoint width，视窗宽度，1vw等于视窗宽度的1%
 
@@ -324,8 +398,8 @@ rpx 是相对于基准宽度的单位，可以根据屏幕宽度进行自适应�
 |#id|#firstname|选择拥有 id="firstname" 的组件|
 |element|view|选择所有 view 组件|
 |element, element|view, checkbox|选择所有文档的 view 组件和所有的 checkbox 组件|
-|::after|view::after|在 view 组件后边插入内容，**仅微信小程序和5+App生效**|
-|::before|view::before|在 view 组件前边插入内容，**仅微信小程序和5+App生效**|
+|::after|view::after|在 view 组件后边插入内容，**仅微信小程序和App生效**|
+|::before|view::before|在 view 组件前边插入内容，**仅微信小程序和App生效**|
 
 **注意：** 
 - 在 ```uni-app``` 中不能使用 ```*``` 选择器。
@@ -349,7 +423,7 @@ page {
 
 uni-app 提供内置 CSS 变量
 
-|CSS变量|描述|5+App|小程序|H5|
+|CSS变量|描述|App|小程序|H5|
 |:-|:-|:-|:-|:-|
 |--status-bar-height|系统状态栏高度|[系统状态栏高度](http://www.html5plus.org/doc/zh_cn/navigator.html#plus.navigator.getStatusbarHeight)、nvue注意见下|25px|0|
 |--window-top|内容区域距离顶部的距离|0|0|NavigationBar 的高度|
@@ -357,7 +431,7 @@ uni-app 提供内置 CSS 变量
 
 
 **注意：**
-- ``var(--status-bar-height)`` 此变量在微信小程序环境为固定 ``25px``，在 5+App 里为手机实际状态栏高度。
+- ``var(--status-bar-height)`` 此变量在微信小程序环境为固定 ``25px``，在 App 里为手机实际状态栏高度。
 - 当设置 ``"navigationStyle":"custom"`` 取消原生导航栏后，由于窗体为沉浸式，占据了状态栏位置。此时可以使用一个高度为 ``var(--status-bar-height)`` 的 view 放在页面顶部，避免页面内容出现在状态栏。
 - 由于在H5端，不存在原生导航栏和tabbar，也是前端div模拟。如果设置了一个固定位置的居底view，在小程序和App端是在tabbar上方，但在H5端会与tabbar重叠。此时可使用`--window-bottom`，不管在哪个端，都是固定在tabbar上方。
 - 目前 nvue 在App端，还不支持 `--status-bar-height`变量，替代方案是在页面onLoad时通过uni.getSystemInfoSync().statusBarHeight获取状态栏高度，然后通过style绑定方式给占位view设定高度。下方提供了示例代码
@@ -371,6 +445,10 @@ uni-app 提供内置 CSS 变量
 
 ```html
 <template>
+    <!-- HBuilderX 2.6.3+ 新增 page-meta, 详情：https://uniapp.dcloud.io/component/page-meta -->
+    <page-meta>
+        <navigation-bar />
+    </page-meta>
 	<view>
 		<view class="status_bar">
 			<!-- 这里是状态栏 -->
@@ -467,6 +545,7 @@ uni-app 提供内置 CSS 变量
 - 小程序不支持在css中使用本地文件，包括本地的背景图和字体文件。需以base64方式方可使用。App端在v3模式以前，也有相同限制。v3编译模式起支持直接使用本地背景图和字体。
 - 网络路径必须加协议头 ``https``。
 - 从 [http://www.iconfont.cn](http://www.iconfont.cn) 上拷贝的代码，默认是没加协议头的。 
+- 从 [http://www.iconfont.cn](http://www.iconfont.cn) 上下载的字体文件，都是同名字体（字体名都叫iconfont，安装字体文件时可以看到），在nvue内使用时需要注意，此字体名重复可能会显示不正常，可以使用工具修改。
 - 使用本地路径图标字体需注意：
     1. 为方便开发者，在字体文件小于 40kb 时，``uni-app`` 会自动将其转化为 base64 格式；
     2. 字体文件大于等于 40kb，仍转换为 base64 方式使用的话可能有性能问题，如开发者必须使用，则需自己将其转换为 base64 格式使用，或将其挪到服务器上，从网络地址引用；
@@ -477,6 +556,16 @@ uni-app 提供内置 CSS 变量
             src: url('~@/static/iconfont.ttf');
         }
    ```
+
+`nvue`中不可直接使用css的方式引入字体文件，需要使用以下方式在js内引入。nvue内不支持本地路径引入字体，请使用网络链接或者`base64`形式。**`src`字段的`url`的括号内一定要使用单引号。**
+
+```js
+var domModule = weex.requireModule('dom');
+domModule.addRule('fontFace', {
+  'fontFamily': "fontFamilyName",
+  'src': "url('https://...')"
+})
+```
 
 
 **示例：**
@@ -545,7 +634,7 @@ ES6 API 的支持，详见如下表格部分（`x` 表示不支持，无特殊�
 * 微信小程序[详见](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/js-support.html#%E5%AE%A2%E6%88%B7%E7%AB%AF%20ES6%20API%20%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5)
 * 阿里小程序[详见](https://docs.alipay.com/mini/framework/implementation-detail)
 * 百度小程序[详见](https://smartprogram.baidu.com/docs/develop/framework/operating-environment/)
-* 头条小程序[详见](https://developer.toutiao.com/dev/cn/mini-app/develop/framework/mini-app-runtime/javascript-support)
+* 字节跳动小程序[详见](https://developer.toutiao.com/dev/cn/mini-app/develop/framework/mini-app-runtime/javascript-support)
 * QQ小程序[详见](https://q.qq.com/wiki/develop/miniprogram/frame/useful/useful_env.html#es6%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5)
 
 |String|iOS8|iOS9|iOS10|Android|
@@ -743,7 +832,7 @@ const package = require('packageName')
 |微信小程序|支持微信小程序组件|wxcomponents|
 |支付宝小程序|支持支付宝小程序组件|mycomponents|
 |百度小程序|支持百度小程序组件|swancomponents|
-|头条小程序|支持头条小程序组件|ttcomponents|
+|字节跳动小程序|支持字节跳动小程序组件|ttcomponents|
 |QQ小程序|支持QQ小程序组件|wxcomponents|
 
 此文档要求开发者对各端小程序的**自定义组件**有一定了解，没接触过小程序**自定义组件**的可以参考：
@@ -751,7 +840,7 @@ const package = require('packageName')
 - [微信小程序自定义组件](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/)
 - [百度小程序自定义组件](https://smartprogram.baidu.com/docs/develop/framework/custom-component/)
 - [支付宝小程序自定义组件](https://docs.alipay.com/mini/framework/custom-component-overview)
-- [头条小程序自定义组件](https://developer.toutiao.com/docs/framework/custom_component_intro.html)
+- [字节跳动小程序自定义组件](https://developer.toutiao.com/docs/framework/custom_component_intro.html)
 - [QQ小程序自定义组件](https://q.qq.com/wiki/develop/miniprogram/frame/diy_components/)
 
 **目录结构**
@@ -965,13 +1054,13 @@ WXS是一套运行在视图层的脚本语言，[微信端的规范详见](https
 
 它的特点是运行在视图层。当需要避免逻辑层和渲染层交互通信折损时，可采用wxs。
 
-uni-app可以将wxs代码编译到微信小程序、QQ小程序、APP、H5上（`HBuilderX 2.2.5`及以上版本）
+uni-app可以将wxs代码编译到微信小程序、QQ小程序、app-vue、H5上（`uni-app 2.2.5`及以上版本）
 
 与wxs类似，百度小程序提供了Filter、阿里小程序提供了SJS，uni-app也支持使用这些功能，并将它们编译到百度和阿里的小程序端。不过它们的功能还不如wxs强大。此外头条系小程序自身不支持类似功能。
 
 **平台差异说明**
 
-|App|H5|微信小程序|支付宝小程序|百度小程序|头条小程序|QQ小程序|
+|App|H5|微信小程序|支付宝小程序|百度小程序|字节跳动小程序|QQ小程序|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |√(不支持nvue)|√|√|SJS|Filter|x|√|
 
@@ -1178,12 +1267,76 @@ export default {
 - `nvue`页面暂不支持wxs、sjs、filter.js
 - 各个`script`标签会分别被打包至对应支持平台，不需要额外写条件编译
 - 自`HBuilderX 2.2.5`开始，不推荐使用各个小程序自有的引入方式，推荐使用`script`标签引入
+- App和H5端，提供了wxs的升级版，更加强大，见下面的 [renderjs](?id=renderjs) 章节
+
+## renderjs
+`renderjs`是一个运行在视图层的js。它比[WXS](?id=wxs)更加强大。它只支持app-vue和h5。
+
+`renderjs`的主要作用有2个：
+- 大幅降低逻辑层和视图层的通讯损耗，提供高性能视图交互能力
+- 在视图层操作dom，运行for web的js库
+
+**平台差异说明**
+
+|App|H5|微信小程序|支付宝小程序|百度小程序|字节跳动小程序|QQ小程序|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|√(2.5.5+，仅支持vue，并要求v3编译器)|√|x|x|x|x|x|
+
+renderjs，以 vue 组件的写法运行在 view 层。
+
+### 使用方式
+
+设置 script 节点的 lang 为 renderjs
+```html
+<script module="test" lang="renderjs">
+	export default {
+		mounted() {
+			// ...
+		},
+		methods: {
+			// ...
+		}
+	}
+</script>
+```
+
+### 示例
+
+* [通过renderjs，在app和h5端使用完整的 `echarts`](https://ext.dcloud.net.cn/plugin?id=1207)
+
+### 功能详解
+- 大幅降低逻辑层和视图层的通讯损耗，提供高性能视图交互能力
+
+逻辑层和视图层分离有很多好处，但也有一个副作用是在造成了两层之间通信阻塞。尤其是小程序和App的Android端阻塞问题影响了高性能应用的制作。
+
+`renderjs`运行在视图层，可以直接操作视图层的元素，避免通信折损。
+
+在hello uni-app的canvas示例中，App端使用了`renderjs`，由运行在视图层的`renderjs`直接操作视图层的canvas，实现了远超微信小程序的流畅canvas动画示例。具体在[hello uni-app](https://m3w.cn/uniapp)示例中体验，对比App端和小程序端的性能差异。
+
+- 在视图层操作dom，运行for web的js库
+官方不建议在uni-app里操作dom，但如果你不开发小程序，想使用一些操作了dom、window的库，其实可以使用`renderjs`来解决。
+
+在app-vue环境下，视图层由webview渲染，而`renderjs`运行在视图层，自然可以操作dom和window。
+
+这是一个基于`renderjs`运行echart完整版的示例：[renderjs版echart](https://ext.dcloud.net.cn/plugin?id=1207)
+
+同理，`f2`、`threejs`等库都可以这么用。
+
+
+### 注意事项
+
+* 可以使用 dom、bom API 不可直接访问逻辑层数据
+* 视图层和逻辑层通讯方式与 [WXS](?id=wxs) 一致
+* 观测更新的数据在 view 层可以直接访问到
+* 不要直接引用大型类库，推荐通过动态创建 script 方式引用
+* view 层的页面引用资源的路径相对于根目录计算，例如：./static/test.js
+* 目前仅支持内联使用
 
 
 ## 致谢
 
 ```uni-app```使用 ```vue``` 语法，开发多端应用，感谢```Vue```团队！！
 
-为了照顾开发者的已有学习积累，```uni-app```的组件和api设计，基本参考了微信小程序，学过微信小程序开发，了解```vue```，就能直接上手```uni-app```；感谢微信小程序团队！
+为了减少开发者的学习成本，```uni-app```的组件和api设计，基本参考了微信小程序，学过微信小程序开发，了解```vue```，就能直接上手```uni-app```；感谢微信小程序团队！
 
 ```uni-app``` 在小程序端，学习参考了[mpvue](https://mpvue.com/)及[Megalo](https://megalojs.org/)，感谢美团点评技术团队、网易考拉团队!

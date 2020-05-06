@@ -1,6 +1,7 @@
 
 <script>
 import touchtrack from 'uni-mixins/touchtrack'
+import { deepClone } from 'uni-shared'
 
 export default {
   name: 'Swiper',
@@ -61,6 +62,10 @@ export default {
     displayMultipleItems: {
       type: [Number, String],
       default: 1
+    },
+    disableTouch: {
+      type: [Boolean, String],
+      default: false
     }
   },
   data () {
@@ -166,6 +171,7 @@ export default {
   },
   beforeDestroy () {
     this._cancelSchedule()
+    cancelAnimationFrame(this._animationFrame)
   },
   methods: {
     _inintAutoplay (enable) {
@@ -182,7 +188,7 @@ export default {
       var current = -1
       if (this.currentItemId) {
         for (let i = 0, items = this.items; i < items.length; i++) {
-          let componentInstance = items[i].componentInstance
+          const componentInstance = items[i].componentInstance
           if (componentInstance && componentInstance.itemId === this.currentItemId) {
             current = i
             break
@@ -421,7 +427,7 @@ export default {
       var s = acc * time * time / 2
       var l = toPos + s
       this._updateViewport(l)
-      requestAnimationFrame(this._animateFrameFuncProto.bind(this))
+      this._animationFrame = requestAnimationFrame(this._animateFrameFuncProto.bind(this))
     },
     _animateViewport (current, source, n) {
       this._cancelViewportAnimation()
@@ -464,7 +470,7 @@ export default {
       }
       if (!this._requestedAnimation) {
         this._requestedAnimation = true
-        requestAnimationFrame(this._animateFrameFuncProto.bind(this))
+        this._animationFrame = requestAnimationFrame(this._animateFrameFuncProto.bind(this))
       }
     },
     _cancelViewportAnimation () {
@@ -537,6 +543,9 @@ export default {
       }
     },
     _handleContentTrack (e) {
+      if (this.disableTouch) {
+        return
+      }
       if (!this._invalid) {
         if (e.detail.state === 'start') {
           this.userTracking = true
@@ -579,21 +588,26 @@ export default {
     var slidesDots = []
     var swiperItems = []
     if (this.$slots.default) {
-      this.$slots.default.forEach(vnode => {
+      deepClone(this.$slots.default, createElement).forEach(vnode => {
         if (vnode.componentOptions && vnode.componentOptions.tag === 'v-uni-swiper-item') {
           swiperItems.push(vnode)
         }
       })
     }
     for (let index = 0, length = swiperItems.length; index < length; index++) {
-      let currentSync = this.currentSync
+      const currentSync = this.currentSync
       slidesDots.push(createElement('div', {
+        on: {
+          click: () => {
+            this._animateViewport(this.currentSync = index, this.currentChangeSource = 'click', this.circularEnabled ? 1 : 0)
+          }
+        },
         class: {
           'uni-swiper-dot': true,
           'uni-swiper-dot-active': (index < currentSync + this.displayMultipleItemsNumber && index >= currentSync) || (index < currentSync + this.displayMultipleItemsNumber - length)
         },
         style: {
-          'background': index === currentSync ? this.indicatorActiveColor : this.indicatorColor
+          background: index === currentSync ? this.indicatorActiveColor : this.indicatorColor
         }
       }))
     }
@@ -601,7 +615,7 @@ export default {
     var slidesWrapperChild = [createElement('div', {
       ref: 'slides',
       style: this.slidesStyle,
-      'class': 'uni-swiper-slides'
+      class: 'uni-swiper-slides'
     }, [
       createElement('div', {
         ref: 'slideFrame',
@@ -612,16 +626,16 @@ export default {
     if (this.indicatorDots) {
       slidesWrapperChild.push(createElement('div', {
         ref: 'slidesDots',
-        'class': ['uni-swiper-dots', this.vertical ? 'uni-swiper-dots-vertical' : 'uni-swiper-dots-horizontal']
+        class: ['uni-swiper-dots', this.vertical ? 'uni-swiper-dots-vertical' : 'uni-swiper-dots-horizontal']
       }, slidesDots))
     }
 
     return createElement(
-      'uni-swiper',
-      [createElement('div', {
-        ref: 'slidesWrapper',
-        'class': 'uni-swiper-wrapper',
+      'uni-swiper', {
         on: this.$listeners
+      }, [createElement('div', {
+        ref: 'slidesWrapper',
+        class: 'uni-swiper-wrapper'
       }, slidesWrapperChild)]
     )
   }

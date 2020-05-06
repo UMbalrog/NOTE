@@ -1,17 +1,21 @@
 <template>
   <uni-input
     @change.stop
-    v-on="$listeners">
+    v-on="$listeners"
+  >
     <div
       ref="wrapper"
-      class="uni-input-wrapper">
+      class="uni-input-wrapper"
+    >
       <div
         v-show="!(composing || inputValue.length)"
         ref="placeholder"
         :style="placeholderStyle"
         :class="placeholderClass"
         class="uni-input-placeholder"
-      >{{ placeholder }}</div>
+      >
+        {{ placeholder }}
+      </div>
       <input
         ref="input"
         v-model="inputValue"
@@ -33,13 +37,14 @@
 </template>
 <script>
 import {
-  emitter
+  emitter,
+  keyboard
 } from 'uni-mixins'
 const INPUT_TYPES = ['text', 'number', 'idcard', 'digit', 'password']
 const NUMBER_TYPES = ['number', 'digit']
 export default {
   name: 'Input',
-  mixins: [emitter],
+  mixins: [emitter, keyboard],
   model: {
     prop: 'value',
     event: 'update:value'
@@ -71,7 +76,7 @@ export default {
     },
     placeholderClass: {
       type: String,
-      default: ''
+      default: 'input-placeholder'
     },
     disabled: {
       type: [Boolean, String],
@@ -92,7 +97,7 @@ export default {
   },
   data () {
     return {
-      inputValue: this.value + '',
+      inputValue: this._getValueString(this.value),
       composing: false,
       wrapperHeight: 0,
       cachedValue: ''
@@ -128,7 +133,7 @@ export default {
       value && this._focusInput()
     },
     value (value) {
-      this.inputValue = value + ''
+      this.inputValue = this._getValueString(value)
     },
     inputValue (value) {
       this.$emit('update:value', value)
@@ -164,6 +169,8 @@ export default {
       }
       $vm = $vm.$parent
     }
+
+    this.initKeyboard(this.$refs.input)
 
     this.focus && this._focusInput()
   },
@@ -248,6 +255,9 @@ export default {
         value: this.inputValue,
         key: this.name
       } : {}
+    },
+    _getValueString (value) {
+      return value === null ? '' : String(value)
     }
   }
 }
@@ -279,28 +289,30 @@ uni-input[hidden] {
 
 .uni-input-wrapper,
 .uni-input-form {
-  display: block;
+  display: flex;
   position: relative;
   width: 100%;
   height: 100%;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .uni-input-placeholder,
-.uni-input-input{
+.uni-input-input {
   width: 100%;
 }
 
 .uni-input-placeholder {
   position: absolute;
-  top: 50%;
+  top: auto !important;
   left: 0;
-  transform: translateY(-50%);
   color: gray;
   overflow: hidden;
   text-overflow: clip;
   white-space: pre;
   word-break: keep-all;
   pointer-events: none;
+  line-height: inherit;
 }
 
 .uni-input-input {

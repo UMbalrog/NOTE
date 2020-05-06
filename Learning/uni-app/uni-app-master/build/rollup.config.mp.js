@@ -1,6 +1,6 @@
 const path = require('path')
-const alias = require('rollup-plugin-alias')
-const replace = require('rollup-plugin-replace')
+const alias = require('@rollup/plugin-alias')
+const replace = require('@rollup/plugin-replace')
 
 const PLATFORMS = {
   'mp-weixin': {
@@ -23,6 +23,10 @@ const PLATFORMS = {
     prefix: 'tt',
     title: '头条小程序'
   },
+  'quickapp-light': {
+    prefix: 'qa',
+    title: '快应用(Light)版'
+  },
   'app-plus': {
     prefix: 'wx',
     title: 'app-plus'
@@ -31,18 +35,35 @@ const PLATFORMS = {
 
 const platform = PLATFORMS[process.env.UNI_PLATFORM]
 
+let input = 'src/core/runtime/index.js'
+const output = {
+  file: `packages/uni-${process.env.UNI_PLATFORM}/dist/index.js`,
+  format: 'es'
+}
+
+if (process.env.UNI_MP) {
+  input = 'src/core/runtime/mp/index.js'
+  output.file = `packages/uni-${process.env.UNI_PLATFORM}/dist/mp.js`
+}
+
 module.exports = {
-  input: 'src/core/runtime/index.js',
-  output: {
-    file: `packages/uni-${process.env.UNI_PLATFORM}/dist/index.js`,
-    format: 'es'
-  },
+  input,
+  output,
   plugins: [
     alias({
-      'uni-shared': path.resolve(__dirname, '../src/shared/util.js'),
-      'uni-platform': path.resolve(__dirname, '../src/platforms/' + process.env.UNI_PLATFORM),
-      'uni-wrapper': path.resolve(__dirname, '../src/core/runtime/wrapper'),
-      'uni-helpers': path.resolve(__dirname, '../src/core/helpers')
+      entries: [{
+        find: 'uni-shared',
+        replacement: path.resolve(__dirname, '../src/shared/util.js')
+      }, {
+        find: 'uni-platform',
+        replacement: path.resolve(__dirname, '../src/platforms/' + process.env.UNI_PLATFORM)
+      }, {
+        find: 'uni-wrapper',
+        replacement: path.resolve(__dirname, '../src/core/runtime/wrapper')
+      }, {
+        find: 'uni-helpers',
+        replacement: path.resolve(__dirname, '../src/core/helpers')
+      }]
     }),
     replace({
       __GLOBAL__: platform.prefix,

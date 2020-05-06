@@ -5,6 +5,14 @@ const {
   sassLoaderVersion
 } = require('@dcloudio/uni-cli-shared/lib/scss')
 
+const isWin = /^win/.test(process.platform)
+
+function genTranspileDepRegex (depPath) {
+  return new RegExp(isWin
+    ? depPath.replace(/\\/g, '\\\\') // double escape for windows style path
+    : depPath)
+}
+
 module.exports = function initOptions (options) {
   const {
     getPlatformScss,
@@ -16,12 +24,12 @@ module.exports = function initOptions (options) {
   }
 
   // 增加 src/node_modules 解析
-  options.transpileDependencies.push(path.resolve(process.env.UNI_INPUT_DIR, 'node_modules'))
+  options.transpileDependencies.push(genTranspileDepRegex(path.resolve(process.env.UNI_INPUT_DIR, 'node_modules')))
   options.transpileDependencies.push('@dcloudio/uni-' + process.env.UNI_PLATFORM)
   options.transpileDependencies.push('@dcloudio/uni-stat')
 
-  if (process.env.UNI_PLATFORM === 'app-plus') {
-    options.transpileDependencies.push('format-log.js')
+  if (process.env.UNI_PLATFORM !== 'mp-weixin') { // mp runtime
+    options.transpileDependencies.push('@dcloudio/uni-mp-weixin')
   }
 
   if (process.env.UNI_PLATFORM === 'h5') { // h5 dev 用到了这两个，需要 babel
@@ -33,7 +41,7 @@ module.exports = function initOptions (options) {
     options.css = {}
   }
 
-  if (process.env.UNI_PLATFORM === 'h5') {
+  if (process.env.UNI_PLATFORM === 'h5' || process.env.UNI_USING_V3) {
     options.css.extract = false
   } else {
     options.css.extract = true
@@ -59,10 +67,19 @@ module.exports = function initOptions (options) {
   let sassData = isSass ? getPlatformSass() : getPlatformScss()
 
   if (isSass) {
-    sassData = `@import "@/uni.sass"`
+    sassData = '@import "@/uni.sass"'
   } else if (isScss) {
     sassData = `${sassData}
   @import "@/uni.scss";`
+  }
+
+  if (!options.css.loaderOptions.sass.sassOptions) {
+    options.css.loaderOptions.sass.sassOptions = {}
+  }
+  // 指定 outputStyle, 否则 production 模式下会被默认成 compressed
+  const outputStyle = options.css.loaderOptions.sass.sassOptions.outputStyle
+  if (!outputStyle || outputStyle === 'compressed') {
+    options.css.loaderOptions.sass.sassOptions.outputStyle = 'expanded'
   }
 
   if (sassLoaderVersion < 8) {
@@ -71,7 +88,7 @@ module.exports = function initOptions (options) {
     options.css.loaderOptions.sass.prependData = sassData
   }
 
-  let userPostcssConfigPath = path.resolve(process.env.UNI_INPUT_DIR, 'postcss.config.js')
+  const userPostcssConfigPath = path.resolve(process.env.UNI_INPUT_DIR, 'postcss.config.js')
   if (fs.existsSync(userPostcssConfigPath)) {
     options.css.loaderOptions.postcss.config.path = userPostcssConfigPath
   } else {

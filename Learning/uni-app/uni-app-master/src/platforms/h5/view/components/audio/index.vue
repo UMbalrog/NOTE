@@ -1,32 +1,36 @@
 <template>
   <uni-audio
     :id="id"
-    :src="src"
-    :loop="loop"
-    :controls="controls"
-    :poster="poster"
-    :name="name"
-    :author="author"
+    :controls="!!controls"
     v-on="$listeners"
   >
     <audio
       ref="audio"
       :loop="loop"
-      style="display:none;"/>
+      style="display:none;"
+    />
     <div class="uni-audio-default">
       <div
         :style="'background-image: url('+$getRealPath(poster)+');'"
-        class="uni-audio-left">
+        class="uni-audio-left"
+      >
         <div
           :class="{play:!playing,pause:playing}"
           class="uni-audio-button"
-          @click="trigger"/>
+          @click="trigger"
+        />
       </div>
       <div class="uni-audio-right">
-        <div class="uni-audio-time">{{ currentTime }}</div>
+        <div class="uni-audio-time">
+          {{ currentTime }}
+        </div>
         <div class="uni-audio-info">
-          <div class="uni-audio-name">{{ name }}</div>
-          <div class="uni-audio-author">{{ author }}</div>
+          <div class="uni-audio-name">
+            {{ name }}
+          </div>
+          <div class="uni-audio-author">
+            {{ author }}
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +89,7 @@ export default {
     }
   },
   mounted () {
-    let audio = this.$refs.audio
+    const audio = this.$refs.audio
     audio.addEventListener('error', $event => {
       this.playing = false
       this.$trigger('error', $event, {})

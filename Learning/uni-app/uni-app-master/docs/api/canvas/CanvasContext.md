@@ -2,7 +2,7 @@
 
 **平台差异说明**
 
-|App|H5|微信小程序|支付宝小程序|百度小程序|头条小程序|QQ小程序|
+|App|H5|微信小程序|支付宝小程序|百度小程序|字节跳动小程序|QQ小程序|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |√|√|√|√|√|√|√|
 
@@ -10,11 +10,11 @@ App-nvue下如需使用canvas，暂未封装为uni API，可参考[文档](https
 
 ### CanvasContext.fillStyle string
 
-填充颜色。用法同 [CanvasContext.setFillStyle()](./CanvasContext?id=canvascontextsetfillstyle)。
+填充颜色。用法同 [CanvasContext.setFillStyle()](#canvascontextsetfillstyle)。
 
 ### CanvasContext.strokeStyle string
 
-边框颜色。用法同 [CanvasContext.setStrokeStyle()](./CanvasContext?id=canvascontextsetstrokestyle)。
+边框颜色。用法同 [CanvasContext.setStrokeStyle()](#canvascontextsetstrokestyle)。
 
 ### CanvasContext.shadowOffsetX number
 
@@ -34,19 +34,19 @@ App-nvue下如需使用canvas，暂未封装为uni API，可参考[文档](https
 
 ### CanvasContext.lineWidth number
 
-线条的宽度。用法同 [CanvasContext.setLineWidth()](./CanvasContext?id=canvascontextsetlinewidth)。
+线条的宽度。用法同 [CanvasContext.setLineWidth()](#canvascontextsetlinewidth)。
 
 ### CanvasContext.lineCap number
 
-线条的端点样式。用法同 [CanvasContext.setLineCap()](./CanvasContext?id=canvascontextsetlinecap)。
+线条的端点样式。用法同 [CanvasContext.setLineCap()](#canvascontextsetlinecap)。
 
 ### CanvasContext.lineJoin number
 
-线条的交点样式。用法同 [CanvasContext.setLineJoin()](./CanvasContext?id=canvascontextsetlinejoin)。
+线条的交点样式。用法同 [CanvasContext.setLineJoin()](#canvascontextsetlinejoin)。
 
 ### CanvasContext.miterLimit number
 
-最大斜接长度。用法同 [CanvasContext.setMiterLimit()](./CanvasContext?id=canvascontextsetmiterlimit)。
+最大斜接长度。用法同 [CanvasContext.setMiterLimit()](#canvascontextsetmiterlimit)。
 
 ### CanvasContext.lineDashOffset number
 
@@ -65,7 +65,7 @@ App-nvue下如需使用canvas，暂未封装为uni API，可参考[文档](https
 在绘制新形状时应用的合成操作的类型。目前安卓版本只适用于 `fill` 填充块的合成，用于 `stroke` 线段的合成效果都是 `source-over`。
 
 目前支持的操作有
-* 5+App和H5端：source-over、destination-over、source-in、destination-in、source-out、destination-out、source-atop、destination-atop、lighter、darker、xor、copy
+* App和H5端：source-over、destination-over、source-in、destination-in、source-out、destination-out、source-atop、destination-atop、lighter、darker、xor、copy
 * 微信小程序安卓端：xor, source-over, source-atop, destination-out, lighter, overlay, darken, lighten, hard-light
 * 微信小程序iOS端：xor, source-over, source-atop, destination-over, destination-out, lighter, multiply, overlay, darken, lighten, color-dodge, color-burn, hard-light, soft-light, difference, exclusion, saturation, luminosity
 
@@ -73,7 +73,7 @@ App-nvue下如需使用canvas，暂未封装为uni API，可参考[文档](https
 
 **平台差异说明**
 
-|5+App|H5|微信小程序|支付宝小程序|百度小程序|头条小程序|
+|App|H5|微信小程序|支付宝小程序|百度小程序|字节跳动小程序|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |√|√|√|√|√|√|
 

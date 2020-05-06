@@ -19,7 +19,7 @@ function parseRoutes (config) {
   })
 }
 
-export function registerConfig (config) {
+export function registerConfig (config, Vue) {
   Object.assign(__uniConfig, config)
 
   __uniConfig.viewport = ''
@@ -33,6 +33,6 @@ export function registerConfig (config) {
   parseRoutes(__uniConfig)
 
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`[uni-app] registerConfig`, __uniConfig)
+    console.log('[uni-app] registerConfig', __uniConfig)
   }
 }

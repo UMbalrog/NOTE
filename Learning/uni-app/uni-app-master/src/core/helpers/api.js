@@ -87,8 +87,8 @@ function createKeepAliveApiCallback (apiName, callback) {
   const callbackId = invokeCallbackId++
   const invokeCallbackName = 'api.' + apiName + '.' + callbackId
 
-  const invokeCallback = function (res) {
-    callback(res)
+  const invokeCallback = function (res, extras) {
+    callback(res, extras)
   }
 
   invokeCallbacks[callbackId] = {
@@ -108,7 +108,7 @@ function createApiCallback (apiName, params = {}, extras = {}) {
   params = Object.assign({}, params)
 
   const apiCallbacks = {}
-  for (let name in params) {
+  for (const name in params) {
     const param = params[name]
     if (isFn(param)) {
       apiCallbacks[name] = tryCatch(param)
@@ -135,11 +135,10 @@ function createApiCallback (apiName, params = {}, extras = {}) {
   }
 
   const wrapperCallbacks = {}
-  for (let name in extras) {
+  for (const name in extras) {
     const extra = extras[name]
     if (isFn(extra)) {
       wrapperCallbacks[name] = tryCatchFramework(extra)
-      delete extras[name]
     }
   }
 
@@ -165,7 +164,12 @@ function createApiCallback (apiName, params = {}, extras = {}) {
     } else if (res.errMsg.indexOf(':cancel') !== -1) {
       res.errMsg = apiName + ':cancel'
     } else if (res.errMsg.indexOf(':fail') !== -1) {
-      res.errMsg = apiName + ':fail'
+      let errDetail = ''
+      const spaceIndex = res.errMsg.indexOf(' ')
+      if (spaceIndex > -1) {
+        errDetail = res.errMsg.substr(spaceIndex)
+      }
+      res.errMsg = apiName + ':fail' + errDetail
     }
 
     const errMsg = res.errMsg
@@ -228,15 +232,15 @@ function createInvokeCallback (apiName, params = {}, extras = {}) {
     callbackId
   }
 }
-
-export function invokeCallbackHandler (invokeCallbackId, res) {
+// onNativeEventReceive((event,data)=>{}) 需要两个参数，写死最多两个参数，避免改动太大，影响已有逻辑
+export function invokeCallbackHandler (invokeCallbackId, res, extras) {
   if (typeof invokeCallbackId === 'number') {
     const invokeCallback = invokeCallbacks[invokeCallbackId]
     if (invokeCallback) {
       if (!invokeCallback.keepAlive) {
         delete invokeCallbacks[invokeCallbackId]
       }
-      return invokeCallback.callback(res)
+      return invokeCallback.callback(res, extras)
     }
   }
   return res
@@ -248,10 +252,18 @@ export function wrapperUnimplemented (name) {
   }
 }
 
-export function wrapper (name, invokeMethod, extras) {
+function wrapperExtras (name, extras) {
+  const protocolOptions = protocol[name]
+  if (protocolOptions) {
+    isFn(protocolOptions.beforeSuccess) && (extras.beforeSuccess = protocolOptions.beforeSuccess)
+  }
+}
+
+export function wrapper (name, invokeMethod, extras = {}) {
   if (!isFn(invokeMethod)) {
     return invokeMethod
   }
+  wrapperExtras(name, extras)
   return function (...args) {
     if (isSyncApi(name)) {
       if (validateParams(name, args, -1)) {

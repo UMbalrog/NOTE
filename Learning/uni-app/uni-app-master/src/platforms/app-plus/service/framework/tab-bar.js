@@ -8,7 +8,7 @@ import {
 } from '../bridge'
 
 const TABBAR_HEIGHT = 50
-
+const isIOS = plus.os.name === 'iOS'
 let config
 
 /**
@@ -73,7 +73,7 @@ function setTabBarStyle (style) {
 }
 /**
  * 隐藏 tabBar
- * @param {boolean} animation 是否需要动画效果 暂未支持
+ * @param {boolean} animation 是否需要动画效果
  */
 function hideTabBar (animation) {
   visible = false
@@ -83,7 +83,7 @@ function hideTabBar (animation) {
 }
 /**
  * 显示 tabBar
- * @param {boolean} animation 是否需要动画效果 暂未支持
+ * @param {boolean} animation 是否需要动画效果
  */
 function showTabBar (animation) {
   visible = true
@@ -91,6 +91,8 @@ function showTabBar (animation) {
     animation
   })
 }
+
+const maskClickCallback = []
 
 export default {
   id: '0',
@@ -103,6 +105,11 @@ export default {
     } catch (error) {
       console.log(`uni.requireNativePlugin("uni-tabview") error ${error}`)
     }
+    tabBar.onMaskClick(() => {
+      maskClickCallback.forEach((callback) => {
+        callback()
+      })
+    })
     tabBar && tabBar.onClick(({ index }) => {
       clickCallback(config.list[index], index)
     })
@@ -110,20 +117,27 @@ export default {
       publish('onTabBarMidButtonTap', {})
     })
   },
-  switchTab (page) {
-    const itemLength = config.list.length
+  indexOf (page) {
+    const itemLength = config && config.list && config.list.length
     if (itemLength) {
       for (let i = 0; i < itemLength; i++) {
         if (
           config.list[i].pagePath === page ||
           config.list[i].pagePath === `${page}.html`
         ) {
-          tabBar && tabBar.switchSelect({
-            index: i
-          })
-          return true
+          return i
         }
       }
+    }
+    return -1
+  },
+  switchTab (page) {
+    const index = this.indexOf(page)
+    if (index >= 0) {
+      tabBar && tabBar.switchSelect({
+        index
+      })
+      return true
     }
     return false
   },
@@ -148,7 +162,13 @@ export default {
     return visible
   },
   get height () {
-    return config && config.height ? parseFloat(config.height) : TABBAR_HEIGHT
+    return (config && config.height ? parseFloat(config.height) : TABBAR_HEIGHT) + plus.navigator.getSafeAreaInsets().deviceBottom
+  },
+  // tabBar是否遮挡内容区域
+  get cover () {
+    const array = ['extralight', 'light', 'dark']
+    // 设置背景颜色会失效
+    return isIOS && array.indexOf(config.blurEffect) >= 0 && !config.backgroundColor
   },
   setStyle ({ mask }) {
     tabBar.setMask({
@@ -156,6 +176,10 @@ export default {
     })
   },
   addEventListener (name, callback) {
-    tabBar.onMaskClick(callback)
+    maskClickCallback.push(callback)
+  },
+  removeEventListener (name, callback) {
+    const callbackIndex = maskClickCallback.indexOf(callback)
+    maskClickCallback.splice(callbackIndex, 1)
   }
 }

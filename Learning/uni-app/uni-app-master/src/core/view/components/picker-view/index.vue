@@ -1,4 +1,6 @@
 <script>
+import { deepClone } from 'uni-shared'
+
 export default {
   name: 'PickerView',
   props: {
@@ -37,13 +39,15 @@ export default {
     }
   },
   watch: {
-    value (val) {
-      this.valueSync.length = val.length
-      val.forEach((val, index) => {
-        if (val !== this.valueSync[index]) {
-          this.$set(this.valueSync, index, val)
-        }
-      })
+    value (val, oldVal) {
+      if (val === oldVal || val.length !== oldVal.length || val.findIndex((item, index) => item !== oldVal[index]) >= 0) {
+        this.valueSync.length = val.length
+        val.forEach((val, index) => {
+          if (val !== this.valueSync[index]) {
+            this.$set(this.valueSync, index, val)
+          }
+        })
+      }
     },
     valueSync: {
       deep: true,
@@ -53,7 +57,7 @@ export default {
         } else {
           this.changeSource = ''
           // 避免外部直接对此值进行修改
-          let value = val.map(val => val)
+          const value = val.map(val => val)
           this.$emit('update:value', value)
           this.$trigger('change', {}, {
             value
@@ -91,7 +95,7 @@ export default {
   render (createElement) {
     var items = []
     if (this.$slots.default) {
-      this.$slots.default.forEach(vnode => {
+      deepClone(this.$slots.default, createElement).forEach(vnode => {
         if (vnode.componentOptions && vnode.componentOptions.tag === 'v-uni-picker-view-column') {
           items.push(vnode)
         }
@@ -112,7 +116,7 @@ export default {
       }),
       createElement('div', {
         ref: 'wrapper',
-        'class': 'uni-picker-view-wrapper'
+        class: 'uni-picker-view-wrapper'
       }, items)
       ])
   }
