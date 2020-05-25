@@ -23,6 +23,7 @@ function noop () {}
 
 /**
  * Create a cached version of a pure function.
+ * 创建纯函数的缓存版本。
  */
 function cached (fn) {
   const cache = Object.create(null);
@@ -34,6 +35,7 @@ function cached (fn) {
 
 /**
  * Camelize a hyphen-delimited string.
+ * 用连字符分隔字符串。
  */
 const camelizeRE = /-(\w)/g;
 const camelize = cached((str) => {
